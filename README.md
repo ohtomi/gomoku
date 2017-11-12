@@ -2,7 +2,7 @@
 
 ## Description
 
-
+`gomoku` can help you make a mock server written in your favorite languages.
 
 ## Usage
 
