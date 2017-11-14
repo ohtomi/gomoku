@@ -41,7 +41,7 @@ echo -e "status:200\tresult:'hoge is $1 and fuga is $2'"
 
 ```json
 {
-  "file": "templates/foo.json",
+  "file": "templates/foo.json",
   "result": "${output.result}"
 }
 ```
