@@ -1,6 +1,4 @@
-MAIN_PACKAGE = cmd/gomoku
-REL_TO_ROOT = ../..
-
+MAIN_PACKAGE = $(dir $(shell grep -ir -l --exclude-dir vendor --exclude Makefile "func main()" ./*))
 REPO = $(notdir $(CURDIR))
 VERSION = $(shell grep 'Version string' $(MAIN_PACKAGE)/version.go | sed -E 's/.*"(.+)"$$/\1/')
 COMMIT = $(shell git describe --always)
@@ -17,7 +15,7 @@ build:
 	  -ldflags "-X main.GitCommit=$(COMMIT)" \
 	  -os="$(firstword $(GOX_OS))" \
 	  -arch="$(firstword $(GOX_ARCH))" \
-	  -output="$(REL_TO_ROOT)/pkg/{{.OS}}_{{.Arch}}/{{.Dir}}"
+	  -output="$(CURDIR)/pkg/{{.OS}}_{{.Arch}}/{{.Dir}}"
 
 test:
 	go test -v -parallel=4 ${PACKAGES}
@@ -39,7 +37,7 @@ package: clean
 	  -parallel=3 \
 	  -os="$(GOX_OS)" \
 	  -arch="$(GOX_ARCH)" \
-	  -output="$(REL_TO_ROOT)/pkg/{{.OS}}_{{.Arch}}/{{.Dir}}"
+	  -output="$(CURDIR)/pkg/{{.OS}}_{{.Arch}}/{{.Dir}}"
 
 	@mkdir -p ./dist/$(VERSION)
 
