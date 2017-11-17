@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/ohtomi/gomoku/cmd/gomoku/command"
 	"github.com/mitchellh/cli"
+	"github.com/ohtomi/gomoku/cmd/gomoku/command"
 )
 
 func Commands(meta *command.Meta) map[string]cli.CommandFactory {

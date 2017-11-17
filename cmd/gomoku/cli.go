@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ohtomi/gomoku/cmd/gomoku/command"
 	"github.com/mitchellh/cli"
+	"github.com/ohtomi/gomoku/cmd/gomoku/command"
 )
 
 func Run(args []string) int {
