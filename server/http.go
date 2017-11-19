@@ -2,9 +2,10 @@ package server
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"html"
 	"net/http"
+
+	"github.com/pkg/errors"
 )
 
 func handle(w http.ResponseWriter, r *http.Request) {
