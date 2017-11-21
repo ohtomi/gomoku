@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"strings"
+	"regexp"
 
 	"github.com/pkg/errors"
 )
@@ -16,7 +16,7 @@ func buildHandleFunc(config *Config) http.HandlerFunc {
 			if len(element.Request.Route) == 0 {
 				continue
 			}
-			if !strings.HasPrefix(path, element.Request.Route) {
+			if !regexp.MustCompile(element.Request.Route).MatchString(path) {
 				continue
 			}
 			return &element.Request, &element.Command, &element.Response
