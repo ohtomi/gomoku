@@ -40,7 +40,7 @@ func (c *RunCommand) Run(args []string) int {
 
 	c.Ui.Output(fmt.Sprintf("%+v", config))
 
-	if err := server.StartHttpServer(fmt.Sprintf(":%d", port)); err != nil {
+	if err := server.StartHttpServer(fmt.Sprintf(":%d", port), config); err != nil {
 		c.Ui.Error(err.Error())
 		return 1
 	}
