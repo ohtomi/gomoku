@@ -11,8 +11,14 @@ import (
 )
 
 func buildHandleFunc(config *Config) http.HandlerFunc {
-	selector := func(path string) (*Request, *Command, *Response) {
+	selector := func(method, path string) (*Request, *Command, *Response) {
 		for _, element := range *config {
+			if len(element.Request.Method) == 0 {
+				continue
+			}
+			if !regexp.MustCompile(fmt.Sprintf("(?i)%s", element.Request.Method)).MatchString(method) {
+				continue
+			}
 			if len(element.Request.Route) == 0 {
 				continue
 			}
@@ -25,7 +31,7 @@ func buildHandleFunc(config *Config) http.HandlerFunc {
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		cRequest, cCommand, cResponse := selector(r.URL.Path)
+		cRequest, cCommand, cResponse := selector(r.Method, r.URL.Path)
 
 		if cRequest == nil || cCommand == nil || cResponse == nil {
 			w.WriteHeader(http.StatusOK)
