@@ -7,43 +7,57 @@
 ## Usage
 
 ```bash
-$ gomoku run config.yml
+$ gomoku run --port 8080 --file path/to/gomoku.yml
 ```
 
 ### Configuration
 
-```yml
-# config.yml
-- route: /foo
-  method: get|post
-  handler:
-    path: handlers/foo.sh
-    input:
-      type: list
-      params:
-        - "${form.hoge}"
-        - ${form.fuga}
-    output:
-      type: ltsv
+#### `gomoku.yml`
+
+```yaml
+- request:
+    route: /foo
+    method: get|post
+  command:
+    path: python3
+    args:
+      - -m
+      - foo
   response:
-    status: ${output.status}
+    status: 200
     headers:
-      - 'content/type': application/json
-      - x-foo: foo-foo-foo
-    template: templates/foo.json
+      content/type: application/json; charset=utf-8
+      x-custom-header: foo; bar; baz
+    body: "stdout: {{ .CommandResult.Stdout }}"
 ```
+
+#### `foo.py`
+
+```python
+#!/usr/bin/env python3
+import sys
+print('hello, gomoku! argv: {}'.format(sys.argv))
+```
+
+### Request & Response
 
 ```bash
-#!/bin/bash
-# handlers/foo.sh
-echo -e "status:200\tresult:'hoge is $1 and fuga is $2'"
-```
-
-```json
-{
-  "file": "templates/foo.json",
-  "result": "${output.result}"
-}
+$ curl -v http://localhost:8080/fuga
+*   Trying ::1...
+* Connected to localhost (::1) port 8080 (#0)
+> GET /fuga HTTP/1.1
+> Host: localhost:8080
+> User-Agent: curl/7.43.0
+> Accept: */*
+>
+< HTTP/1.1 200 OK
+< X-Custom-Header: foo; bar; baz
+< Date: Thu, 23 Nov 2017 13:41:25 GMT
+< Content-Length: 84
+< Content-Type: text/plain; charset=utf-8
+<
+stdout: hello, gomoku: ['/Users/ohtomi/src/github.com/ohtomi/gomoku/sample/foo.py']
+* Connection #0 to host localhost left intact
 ```
 
 ## Contributing
