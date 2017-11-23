@@ -43,6 +43,10 @@ func (r *Response) Write(conversation *Conversation, writer http.ResponseWriter)
 	}
 
 	for key, value := range r.Headers {
+		value, err := ApplyTemplateText("header", value, conversation)
+		if err != nil {
+			return err
+		}
 		writer.Header().Set(key, value)
 	}
 
