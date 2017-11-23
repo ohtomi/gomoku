@@ -3,11 +3,15 @@ package server
 import (
 	"bytes"
 	"os/exec"
+	"text/template"
 )
 
 func (c *Command) Execute(conversation *Conversation) error {
 	stdout, stderr := &bytes.Buffer{}, &bytes.Buffer{}
-	cmd := c.buildCommand(stdout, stderr)
+	cmd, err := c.buildCommand(stdout, stderr, conversation)
+	if err != nil {
+		return err
+	}
 
 	if err := cmd.Run(); err != nil {
 		return err
@@ -23,17 +27,29 @@ func (c *Command) Execute(conversation *Conversation) error {
 	return nil
 }
 
-func (c *Command) buildCommand(stdout, stderr *bytes.Buffer) *exec.Cmd {
+func (c *Command) buildCommand(stdout, stderr *bytes.Buffer, conversation *Conversation) (*exec.Cmd, error) {
 	var cmd *exec.Cmd
 
 	if len(c.Args) == 0 {
 		cmd = exec.Command(c.Path)
 	} else {
-		cmd = exec.Command(c.Path, c.Args...)
+		args := make([]string, len(c.Args))
+		for i, v := range c.Args {
+			buf := &bytes.Buffer{}
+			t, err := template.New("args").Parse(v)
+			if err != nil {
+				return nil, err
+			}
+			if err := t.Execute(buf, conversation); err != nil {
+				return nil, err
+			}
+			args[i] = buf.String()
+		}
+		cmd = exec.Command(c.Path, args...)
 	}
 
 	cmd.Stdout = stdout
 	cmd.Stderr = stderr
 
-	return cmd
+	return cmd, nil
 }
