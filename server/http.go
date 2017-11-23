@@ -7,6 +7,8 @@ import (
 	"github.com/pkg/errors"
 )
 
+type CommandResult map[string]interface{}
+
 type Conversation struct {
 	Method     string
 	URL        string
@@ -14,7 +16,7 @@ type Conversation struct {
 	Form       map[string][]string
 	RemoteAddr string
 
-	CommandResult map[string]interface{}
+	CommandResult *CommandResult
 }
 
 func buildHandleFunc(config *Config) http.HandlerFunc {
@@ -35,15 +37,14 @@ func buildHandleFunc(config *Config) http.HandlerFunc {
 			return
 		}
 
-		result, err := cCommand.Execute()
-		if err != nil {
+		if err := cCommand.Execute(conversation); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			// TODO write error as response body?
 			fmt.Fprintf(w, err.Error())
 			return
 		}
 
-		if err := cResponse.Write(result, w); err != nil {
+		if err := cResponse.Write(conversation, w); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			// TODO write error as response body?
 			fmt.Fprintf(w, err.Error())

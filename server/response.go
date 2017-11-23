@@ -7,19 +7,19 @@ import (
 	"text/template"
 )
 
-func (r *Response) Write(result map[string]interface{}, writer http.ResponseWriter) error {
+func (r *Response) Write(conversation *Conversation, writer http.ResponseWriter) error {
 	var body string
 	if len(r.Body) != 0 {
 		buf := &bytes.Buffer{}
 		t := template.Must(template.New("body").Parse(r.Body))
-		if err := t.Execute(buf, result); err != nil {
+		if err := t.Execute(buf, conversation); err != nil {
 			return err
 		}
 		body = buf.String()
 	} else if len(r.Template) != 0 {
 		buf := &bytes.Buffer{}
 		t := template.Must(template.ParseFiles(r.Template))
-		if err := t.Execute(buf, result); err != nil {
+		if err := t.Execute(buf, conversation); err != nil {
 			return err
 		}
 		body = buf.String()

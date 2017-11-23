@@ -5,22 +5,22 @@ import (
 	"os/exec"
 )
 
-func (c *Command) Execute() (map[string]interface{}, error) {
+func (c *Command) Execute(conversation *Conversation) error {
 	stdout, stderr := &bytes.Buffer{}, &bytes.Buffer{}
 	cmd := c.buildCommand(stdout, stderr)
 
 	if err := cmd.Run(); err != nil {
-		return nil, err
+		return err
 	}
 
-	result := map[string]interface{}{
+	conversation.CommandResult = &CommandResult{
 		"Path":       cmd.Path,
 		"Args":       cmd.Args,
 		"WorkingDir": cmd.Dir,
 		"Return":     stdout.String(),
 	}
 
-	return result, nil
+	return nil
 }
 
 func (c *Command) buildCommand(stdout, stderr *bytes.Buffer) *exec.Cmd {
