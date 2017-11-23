@@ -7,7 +7,14 @@ import (
 	"github.com/pkg/errors"
 )
 
-type CommandResult map[string]interface{}
+type CommandResult struct {
+	Env    []string
+	Path   string
+	Args   []string
+	Dir    string
+	Stdout string
+	Stderr string
+}
 
 type Conversation struct {
 	Method     string

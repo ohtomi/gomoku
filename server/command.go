@@ -18,10 +18,12 @@ func (c *Command) Execute(conversation *Conversation) error {
 	}
 
 	conversation.CommandResult = &CommandResult{
-		"Path":       cmd.Path,
-		"Args":       cmd.Args,
-		"WorkingDir": cmd.Dir,
-		"Return":     stdout.String(),
+		Env:    cmd.Env,
+		Path:   cmd.Path,
+		Args:   cmd.Args,
+		Dir:    cmd.Dir,
+		Stdout: stdout.String(),
+		Stderr: stderr.String(),
 	}
 
 	return nil
