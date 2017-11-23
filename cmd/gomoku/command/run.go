@@ -3,6 +3,8 @@ package command
 import (
 	"flag"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/ohtomi/gomoku/server"
@@ -39,6 +41,10 @@ func (c *RunCommand) Run(args []string) int {
 	}
 
 	c.Ui.Output(fmt.Sprintf("%+v", config))
+	if err := os.Chdir(filepath.Dir(filename)); err != nil {
+		c.Ui.Error(err.Error())
+		return 1
+	}
 
 	if err := server.StartHttpServer(fmt.Sprintf(":%d", port), config); err != nil {
 		c.Ui.Error(err.Error())
