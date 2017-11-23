@@ -8,9 +8,8 @@ import (
 )
 
 func (r *Response) Write(conversation *Conversation, writer http.ResponseWriter) error {
-	var body string
+	buf := &bytes.Buffer{}
 	if len(r.Body) != 0 {
-		buf := &bytes.Buffer{}
 		t, err := template.New("body").Parse(r.Body)
 		if err != nil {
 			return err
@@ -18,9 +17,7 @@ func (r *Response) Write(conversation *Conversation, writer http.ResponseWriter)
 		if err := t.Execute(buf, conversation); err != nil {
 			return err
 		}
-		body = buf.String()
 	} else if len(r.Template) != 0 {
-		buf := &bytes.Buffer{}
 		t, err := template.ParseFiles(r.Template)
 		if err != nil {
 			return err
@@ -28,9 +25,8 @@ func (r *Response) Write(conversation *Conversation, writer http.ResponseWriter)
 		if err := t.Execute(buf, conversation); err != nil {
 			return err
 		}
-		body = buf.String()
 	} else {
-		body = ""
+		buf.WriteString("")
 	}
 
 	for key, value := range r.Headers {
@@ -43,7 +39,7 @@ func (r *Response) Write(conversation *Conversation, writer http.ResponseWriter)
 		writer.WriteHeader(r.Status)
 	}
 
-	fmt.Fprintf(writer, body)
+	fmt.Fprintf(writer, buf.String())
 
 	return nil
 }
