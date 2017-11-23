@@ -7,7 +7,7 @@ import (
 	"text/template"
 )
 
-func (r *Response) Write(result map[string]interface{}, w http.ResponseWriter) error {
+func (r *Response) Write(result map[string]interface{}, writer http.ResponseWriter) error {
 	var body string
 	if len(r.Body) != 0 {
 		buf := &bytes.Buffer{}
@@ -28,16 +28,16 @@ func (r *Response) Write(result map[string]interface{}, w http.ResponseWriter) e
 	}
 
 	for key, value := range r.Headers {
-		w.Header().Set(key, value)
+		writer.Header().Set(key, value)
 	}
 
 	if r.Status == 0 {
-		w.WriteHeader(http.StatusOK)
+		writer.WriteHeader(http.StatusOK)
 	} else {
-		w.WriteHeader(r.Status)
+		writer.WriteHeader(r.Status)
 	}
 
-	fmt.Fprintf(w, body)
+	fmt.Fprintf(writer, body)
 
 	return nil
 }
