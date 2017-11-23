@@ -1,45 +1,34 @@
 package server
 
 import (
-	"bytes"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
-	"text/template"
 )
 
 func (r *Response) Write(conversation *Conversation, writer http.ResponseWriter) error {
-	buf := &bytes.Buffer{}
+	var content string
 	if len(r.Body) != 0 {
-		t, err := template.New("body").Parse(r.Body)
+		applied, err := ApplyTemplateText("body", r.Body, conversation)
 		if err != nil {
 			return err
 		}
-		if err := t.Execute(buf, conversation); err != nil {
-			return err
-		}
+		content = applied
 	} else if len(r.Template) != 0 {
-		t, err := template.ParseFiles(r.Template)
+		applied, err := ApplyTemplateFile("template", r.Template, conversation)
 		if err != nil {
 			return err
 		}
-		if err := t.Execute(buf, conversation); err != nil {
-			return err
-		}
+		content = applied
 	} else if len(r.File) != 0 {
-		fd, err := os.Open(r.File)
+		read, err := readFile(r.File)
 		if err != nil {
 			return err
 		}
-		defer fd.Close()
-		content, err := ioutil.ReadAll(fd)
-		if err != nil {
-			return err
-		}
-		buf.Write(content)
+		content = string(read[:len(read)])
 	} else {
-		buf.WriteString("")
+		content = ""
 	}
 
 	for key, value := range r.Headers {
@@ -56,7 +45,16 @@ func (r *Response) Write(conversation *Conversation, writer http.ResponseWriter)
 		writer.WriteHeader(r.Status)
 	}
 
-	fmt.Fprintf(writer, buf.String())
+	fmt.Fprintf(writer, content)
 
 	return nil
+}
+
+func readFile(filename string) ([]byte, error) {
+	fd, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer fd.Close()
+	return ioutil.ReadAll(fd)
 }

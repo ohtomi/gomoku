@@ -3,7 +3,6 @@ package server
 import (
 	"bytes"
 	"os/exec"
-	"text/template"
 )
 
 func (c *Command) Execute(conversation *Conversation) error {
@@ -37,15 +36,11 @@ func (c *Command) buildCommand(stdout, stderr *bytes.Buffer, conversation *Conve
 	} else {
 		args := make([]string, len(c.Args))
 		for i, v := range c.Args {
-			buf := &bytes.Buffer{}
-			t, err := template.New("args").Parse(v)
+			applied, err := ApplyTemplateText("args", v, conversation)
 			if err != nil {
 				return nil, err
 			}
-			if err := t.Execute(buf, conversation); err != nil {
-				return nil, err
-			}
-			args[i] = buf.String()
+			args[i] = applied
 		}
 		cmd = exec.Command(c.Path, args...)
 	}
