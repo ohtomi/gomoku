@@ -15,6 +15,7 @@ type Config []struct {
 }
 
 type Command struct {
+	Type string
 	Path string
 }
 

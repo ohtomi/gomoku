@@ -18,9 +18,12 @@ func buildHandleFunc(config *Config) http.HandlerFunc {
 			return
 		}
 
-		result := map[string]interface{}{
-			"Command": cCommand.Path,
-			"Return":  "foo! bar! baz!, hoge? fuga?",
+		result, err := cCommand.Execute()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			// TODO write error as response body?
+			fmt.Fprintf(w, err.Error())
+			return
 		}
 
 		var body string
