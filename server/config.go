@@ -29,6 +29,7 @@ type Response struct {
 	Headers  map[string]string
 	Body     string
 	Template string
+	File     string
 }
 
 func NewConfig(yamlFile string) (*Config, error) {

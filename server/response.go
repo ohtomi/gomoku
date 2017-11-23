@@ -3,7 +3,9 @@ package server
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"os"
 	"text/template"
 )
 
@@ -25,6 +27,17 @@ func (r *Response) Write(conversation *Conversation, writer http.ResponseWriter)
 		if err := t.Execute(buf, conversation); err != nil {
 			return err
 		}
+	} else if len(r.File) != 0 {
+		fd, err := os.Open(r.File)
+		if err != nil {
+			return err
+		}
+		defer fd.Close()
+		content, err := ioutil.ReadAll(fd)
+		if err != nil {
+			return err
+		}
+		buf.Write(content)
 	} else {
 		buf.WriteString("")
 	}
