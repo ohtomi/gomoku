@@ -26,10 +26,10 @@ func (c *Command) Execute() (map[string]interface{}, error) {
 func (c *Command) buildCommand(stdout, stderr *bytes.Buffer) *exec.Cmd {
 	var cmd *exec.Cmd
 
-	if len(c.Type) == 0 {
+	if len(c.Args) == 0 {
 		cmd = exec.Command(c.Path)
 	} else {
-		cmd = exec.Command(c.Type, c.Path)
+		cmd = exec.Command(c.Path, c.Args...)
 	}
 
 	cmd.Stdout = stdout

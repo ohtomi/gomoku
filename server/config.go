@@ -15,8 +15,8 @@ type Config []struct {
 }
 
 type Command struct {
-	Type string
 	Path string
+	Args []string
 }
 
 type Request struct {
