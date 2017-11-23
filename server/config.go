@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"regexp"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
@@ -57,7 +58,10 @@ func (c *Config) SelectConfigItem(method, path string) (*Request, *Command, *Res
 			}
 		}
 		if len(element.Request.Route) != 0 {
-			if !regexp.MustCompile(element.Request.Route).MatchString(path) {
+			if !strings.HasSuffix(path, "/") {
+				path = fmt.Sprintf("%s/", path)
+			}
+			if !regexp.MustCompile(fmt.Sprintf("^%s/", strings.TrimRight(element.Request.Route, "/"))).MatchString(path) {
 				continue
 			}
 		}
