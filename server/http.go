@@ -13,17 +13,15 @@ import (
 func buildHandleFunc(config *Config) http.HandlerFunc {
 	selector := func(method, path string) (*Request, *Command, *Response) {
 		for _, element := range *config {
-			if len(element.Request.Method) == 0 {
-				continue
+			if len(element.Request.Method) != 0 {
+				if !regexp.MustCompile(fmt.Sprintf("(?i)%s", element.Request.Method)).MatchString(method) {
+					continue
+				}
 			}
-			if !regexp.MustCompile(fmt.Sprintf("(?i)%s", element.Request.Method)).MatchString(method) {
-				continue
-			}
-			if len(element.Request.Route) == 0 {
-				continue
-			}
-			if !regexp.MustCompile(element.Request.Route).MatchString(path) {
-				continue
+			if len(element.Request.Route) != 0 {
+				if !regexp.MustCompile(element.Request.Route).MatchString(path) {
+					continue
+				}
 			}
 			return &element.Request, &element.Command, &element.Response
 		}
