@@ -5,31 +5,13 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"regexp"
 
 	"github.com/pkg/errors"
 )
 
 func buildHandleFunc(config *Config) http.HandlerFunc {
-	selector := func(method, path string) (*Request, *Command, *Response) {
-		for _, element := range *config {
-			if len(element.Request.Method) != 0 {
-				if !regexp.MustCompile(fmt.Sprintf("(?i)%s", element.Request.Method)).MatchString(method) {
-					continue
-				}
-			}
-			if len(element.Request.Route) != 0 {
-				if !regexp.MustCompile(element.Request.Route).MatchString(path) {
-					continue
-				}
-			}
-			return &element.Request, &element.Command, &element.Response
-		}
-		return nil, nil, nil
-	}
-
 	return func(w http.ResponseWriter, r *http.Request) {
-		cRequest, cCommand, cResponse := selector(r.Method, r.URL.Path)
+		cRequest, cCommand, cResponse := config.SelectConfigItem(r.Method, r.URL.Path)
 
 		if cRequest == nil || cCommand == nil || cResponse == nil {
 			w.WriteHeader(http.StatusOK)

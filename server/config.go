@@ -1,7 +1,9 @@
 package server
 
 import (
+	"fmt"
 	"io/ioutil"
+	"regexp"
 
 	"gopkg.in/yaml.v2"
 )
@@ -43,4 +45,21 @@ func NewConfig(yamlFile string) (*Config, error) {
 	}
 
 	return &config, nil
+}
+
+func (c *Config) SelectConfigItem(method, path string) (*Request, *Command, *Response) {
+	for _, element := range *c {
+		if len(element.Request.Method) != 0 {
+			if !regexp.MustCompile(fmt.Sprintf("(?i)%s", element.Request.Method)).MatchString(method) {
+				continue
+			}
+		}
+		if len(element.Request.Route) != 0 {
+			if !regexp.MustCompile(element.Request.Route).MatchString(path) {
+				continue
+			}
+		}
+		return &element.Request, &element.Command, &element.Response
+	}
+	return nil, nil, nil
 }
