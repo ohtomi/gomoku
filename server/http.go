@@ -63,14 +63,14 @@ func buildHandleFunc(config *Config) http.HandlerFunc {
 			}
 		}
 
+		for key, value := range cResponse.Headers {
+			w.Header().Set(key, value)
+		}
+
 		if cResponse.Status == 0 {
 			w.WriteHeader(http.StatusOK)
 		} else {
 			w.WriteHeader(cResponse.Status)
-		}
-
-		for key, value := range cResponse.Headers {
-			w.Header().Add(key, value)
 		}
 
 		fmt.Fprintf(w, body)
