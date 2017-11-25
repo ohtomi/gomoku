@@ -22,7 +22,7 @@ func CreateScaffold(dirname string) error {
 		{
 			Request:  Request{Route: "/foo", Method: "get|post"},
 			Command:  Command{Path: "python3", Args: []string{"-m", "foo", "{{ .URL }}"}},
-			Response: Response{Status: 200, Headers: map[string]string{"content-type": "application/json; charset=utf-8"}, Body: "{\"greeting\": \"{{ .CommandResult.Stdout }}\""},
+			Response: Response{Status: 200, Headers: map[string]string{"content-type": "application/json; charset=utf-8"}, Body: "{\"greeting\": \"{{ .CommandResult.Stdout }}\"}"},
 		},
 		{
 			Request:  Request{Route: "/bar"},
