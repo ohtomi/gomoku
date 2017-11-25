@@ -3,9 +3,11 @@ package server
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"regexp"
 	"strings"
 
+	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 )
 
@@ -16,29 +18,29 @@ type Config []struct {
 }
 
 type Command struct {
-	Path string
-	Args []string
+	Path string   `yaml:",omitempty"`
+	Args []string `yaml:",omitempty"`
 }
 
 type Request struct {
-	Route  string
-	Method string
+	Route  string `yaml:",omitempty"`
+	Method string `yaml:",omitempty"`
 }
 
 type Response struct {
-	Status   int
-	Headers  map[string]string
-	Body     string
-	Template string
-	File     string
+	Status   int               `yaml:",omitempty"`
+	Headers  map[string]string `yaml:",omitempty"`
+	Body     string            `yaml:",omitempty"`
+	Template string            `yaml:",omitempty"`
+	File     string            `yaml:",omitempty"`
 }
 
-func NewConfig(yamlFile string) (*Config, error) {
+func NewConfig(filename string) (*Config, error) {
 	var (
 		config Config
 	)
 
-	buf, err := ioutil.ReadFile(yamlFile)
+	buf, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
@@ -68,4 +70,26 @@ func (c *Config) SelectConfigItem(method, path string) (*Request, *Command, *Res
 		return &element.Request, &element.Command, &element.Response
 	}
 	return nil, nil, nil
+}
+
+func (c *Config) SaveToFile(filename string) error {
+	if _, err := os.Stat(filename); err == nil {
+		return errors.New(fmt.Sprintf("unable to create file: %q already exists", filename))
+	}
+
+	fd, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer fd.Close()
+
+	b, err := yaml.Marshal(c)
+	if err != nil {
+		return err
+	}
+	if _, err := fd.Write(b); err != nil {
+		return err
+	}
+
+	return nil
 }
