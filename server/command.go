@@ -3,6 +3,7 @@ package server
 import (
 	"bytes"
 	"os/exec"
+	"strings"
 )
 
 func (c *Command) Execute(conversation *Conversation) error {
@@ -21,8 +22,8 @@ func (c *Command) Execute(conversation *Conversation) error {
 		Path:   cmd.Path,
 		Args:   cmd.Args,
 		Dir:    cmd.Dir,
-		Stdout: stdout.String(),
-		Stderr: stderr.String(),
+		Stdout: strings.TrimRight(stdout.String(), "\n"),
+		Stderr: strings.TrimRight(stderr.String(), "\n"),
 	}
 
 	return nil
