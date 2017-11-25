@@ -7,57 +7,25 @@
 ## Usage
 
 ```bash
+$ gomoku init sample
+$ cd sample
 $ gomoku run --port 8080 --file path/to/gomoku.yml
-```
 
-### Configuration
-
-#### `gomoku.yml`
-
-```yaml
-- request:
-    route: /foo
-    method: get|post
-  command:
-    path: python3
-    args:
-      - -m
-      - foo
-  response:
-    status: 200
-    headers:
-      content/type: application/json; charset=utf-8
-      x-custom-header: foo; bar; baz
-    body: "stdout: {{ .CommandResult.Stdout }}"
-```
-
-#### `foo.py`
-
-```python
-#!/usr/bin/env python3
-import sys
-print('hello, gomoku! argv: {}'.format(sys.argv))
-```
-
-### Request & Response
-
-```bash
-$ curl -v http://localhost:8080/fuga
+$ curl -v http://localhost:8080/foo
 *   Trying ::1...
 * Connected to localhost (::1) port 8080 (#0)
-> GET /fuga HTTP/1.1
+> GET /foo HTTP/1.1
 > Host: localhost:8080
 > User-Agent: curl/7.43.0
 > Accept: */*
 >
 < HTTP/1.1 200 OK
-< X-Custom-Header: foo; bar; baz
-< Date: Thu, 23 Nov 2017 13:41:25 GMT
-< Content-Length: 84
-< Content-Type: text/plain; charset=utf-8
+< Content-Type: application/json; charset=utf-8
+< Date: Sat, 25 Nov 2017 15:05:39 GMT
+< Content-Length: 42
 <
-stdout: hello, gomoku: ['/Users/ohtomi/src/github.com/ohtomi/gomoku/sample/foo.py']
 * Connection #0 to host localhost left intact
+{"greeting": "hello, gomoku. url is /foo"}
 ```
 
 ## Contributing
