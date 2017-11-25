@@ -9,7 +9,7 @@
 ```bash
 $ gomoku init sample
 $ cd sample
-$ gomoku run --port 8080 --file path/to/gomoku.yml
+$ gomoku run --port 8080 --file ./gomoku.yml
 
 $ curl -v http://localhost:8080/foo
 *   Trying ::1...
