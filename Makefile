@@ -30,6 +30,9 @@ clean:
 	@rm -fr ./pkg
 	@rm -fr ./dist/$(VERSION)
 
+install: clean build
+	cp "$(CURDIR)/pkg/$(firstword $(GOX_OS))_$(firstword $(GOX_ARCH))/$(REPO)" "${GOPATH}/bin"
+
 package: clean go-assets-builder
 	@cd $(MAIN_PACKAGE) ; \
 	gox \
@@ -57,6 +60,6 @@ fmt:
 	gofmt -w .
 
 go-assets-builder:
-	+$(MAKE) -C server
+	@+$(MAKE) -C server
 
-.PHONY: build test test-race vet clean package release fmt go-assets-builder
+.PHONY: build test test-race vet clean install package release fmt go-assets-builder
