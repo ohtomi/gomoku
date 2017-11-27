@@ -18,6 +18,7 @@ type Config []struct {
 }
 
 type Command struct {
+	Env  []string `yaml:",omitempty"`
 	Path string   `yaml:",omitempty"`
 	Args []string `yaml:",omitempty"`
 }

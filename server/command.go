@@ -51,6 +51,18 @@ func (c *Command) buildCommand(stdout, stderr *bytes.Buffer, conversation *Conve
 		cmd = exec.Command(c.Path, args...)
 	}
 
+	if len(c.Env) > 0 {
+		env := make([]string, len(c.Env))
+		for i, v := range c.Env {
+			applied, err := ApplyTemplateText("env", v, conversation)
+			if err != nil {
+				return nil, err
+			}
+			env[i] = applied
+		}
+		cmd.Env = env
+	}
+
 	cmd.Stdout = stdout
 	cmd.Stderr = stderr
 

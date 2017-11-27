@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import sys
 
-print('hello, gomoku. url is {}'.format(sys.argv[1]))
+print('hello, {}. method is {}, url is {}'.format(os.environ['GOMOKU'], os.environ['METHOD'], sys.argv[1]))
