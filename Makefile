@@ -9,7 +9,7 @@ GOX_ARCH = amd64 386
 
 default: test
 
-build:
+build: go-assets-builder
 	@cd $(MAIN_PACKAGE) ; \
 	gox \
 	  -ldflags "-X main.GitCommit=$(COMMIT)" \
@@ -30,7 +30,7 @@ clean:
 	@rm -fr ./pkg
 	@rm -fr ./dist/$(VERSION)
 
-package: clean
+package: clean go-assets-builder
 	@cd $(MAIN_PACKAGE) ; \
 	gox \
 	  -ldflags "-X main.GitCommit=$(COMMIT)" \
@@ -56,4 +56,7 @@ release: package
 fmt:
 	gofmt -w .
 
-.PHONY: build test test-race vet clean package release fmt
+go-assets-builder:
+	+$(MAKE) -C server
+
+.PHONY: build test test-race vet clean package release fmt go-assets-builder
