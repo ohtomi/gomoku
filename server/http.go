@@ -26,7 +26,7 @@ type Conversation struct {
 	CommandResult *CommandResult
 }
 
-func buildHandleFunc(config *Config) http.HandlerFunc {
+func buildHandleFunc(config *Config, verbose bool) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cRequest, cCommand, cResponse := config.SelectConfigItem(r.Method, r.URL.Path)
 
@@ -39,29 +39,32 @@ func buildHandleFunc(config *Config) http.HandlerFunc {
 
 		if err := cRequest.Transform(conversation, r); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			// TODO write error as response body?
-			fmt.Fprintf(w, err.Error())
+			if verbose {
+				fmt.Fprintf(w, err.Error())
+			}
 			return
 		}
 
 		if err := cCommand.Execute(conversation); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			// TODO write error as response body?
-			fmt.Fprintf(w, err.Error())
+			if verbose {
+				fmt.Fprintf(w, err.Error())
+			}
 			return
 		}
 
 		if err := cResponse.Write(conversation, w); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			// TODO write error as response body?
-			fmt.Fprintf(w, err.Error())
+			if verbose {
+				fmt.Fprintf(w, err.Error())
+			}
 			return
 		}
 	}
 }
 
-func StartHttpServer(addr string, config *Config) error {
-	http.HandleFunc("/", buildHandleFunc(config))
+func StartHttpServer(addr string, config *Config, verbose bool) error {
+	http.HandleFunc("/", buildHandleFunc(config, verbose))
 	if err := http.ListenAndServe(addr, nil); err != nil {
 		return errors.Wrap(err, "failed to start http server")
 	}

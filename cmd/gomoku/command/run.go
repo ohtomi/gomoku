@@ -18,6 +18,7 @@ func (c *RunCommand) Run(args []string) int {
 	var (
 		port     int
 		filename string
+		verbose  bool
 	)
 
 	flags := flag.NewFlagSet("run", flag.ContinueOnError)
@@ -29,6 +30,8 @@ func (c *RunCommand) Run(args []string) int {
 	flags.IntVar(&port, "p", 8080, "")
 	flags.StringVar(&filename, "file", "gomoku.yml", "")
 	flags.StringVar(&filename, "f", "gomoku.yml", "")
+	flags.BoolVar(&verbose, "verbose", false, "")
+	flags.BoolVar(&verbose, "v", false, "")
 
 	if err := flags.Parse(args); err != nil {
 		return 1
@@ -45,7 +48,7 @@ func (c *RunCommand) Run(args []string) int {
 		return 1
 	}
 
-	if err := server.StartHttpServer(fmt.Sprintf(":%d", port), config); err != nil {
+	if err := server.StartHttpServer(fmt.Sprintf(":%d", port), config, verbose); err != nil {
 		c.Ui.Error(err.Error())
 		return 1
 	}
@@ -60,8 +63,9 @@ func (c *RunCommand) Synopsis() string {
 func (c *RunCommand) Help() string {
 	helpText := `usage: gomoku run [OPTIONS...]
 Options:
-  --port, -p  Port number listened by gomoku HTTP server. By default, 8080.
-  --file, -f  Path to config file. By default, "./gomoku.yml".
+  --port, -p     Port number listened by gomoku HTTP server. By default, 8080.
+  --file, -f     Path to config file. By default, "./gomoku.yml".
+  --verbose, -v  Print verbosely. By default, false.
 `
 	return strings.TrimSpace(helpText)
 }
