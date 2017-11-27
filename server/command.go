@@ -7,6 +7,11 @@ import (
 )
 
 func (c *Command) Execute(conversation *Conversation) error {
+	if len(c.Path) == 0 {
+		conversation.CommandResult = &CommandResult{}
+		return nil
+	}
+
 	stdout, stderr := &bytes.Buffer{}, &bytes.Buffer{}
 	cmd, err := c.buildCommand(stdout, stderr, conversation)
 	if err != nil {
