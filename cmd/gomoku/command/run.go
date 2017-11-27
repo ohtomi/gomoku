@@ -40,7 +40,6 @@ func (c *RunCommand) Run(args []string) int {
 		return 1
 	}
 
-	c.Ui.Output(fmt.Sprintf("%+v", config))
 	if err := os.Chdir(filepath.Dir(filename)); err != nil {
 		c.Ui.Error(err.Error())
 		return 1
@@ -59,7 +58,7 @@ func (c *RunCommand) Synopsis() string {
 }
 
 func (c *RunCommand) Help() string {
-	helpText := `usage: gomoku run [options...]
+	helpText := `usage: gomoku run [OPTIONS...]
 Options:
   --port, -p  Port number listened by gomoku HTTP server. By default, 8080.
   --file, -f  Path to config file. By default, "./gomoku.yml".
