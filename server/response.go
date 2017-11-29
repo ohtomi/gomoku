@@ -16,13 +16,21 @@ func (r *Response) Write(conversation *Conversation, writer http.ResponseWriter)
 		}
 		content = applied
 	} else if len(r.Template) != 0 {
-		applied, err := ApplyTemplateFile("template", r.Template, conversation)
+		template, err := ApplyTemplateText("template", r.Template, conversation)
+		if err != nil {
+			return err
+		}
+		applied, err := ApplyTemplateFile("template", template, conversation)
 		if err != nil {
 			return err
 		}
 		content = applied
 	} else if len(r.File) != 0 {
-		read, err := readFile(r.File)
+		file, err := ApplyTemplateText("file", r.File, conversation)
+		if err != nil {
+			return err
+		}
+		read, err := readFile(file)
 		if err != nil {
 			return err
 		}
