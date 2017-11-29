@@ -31,7 +31,6 @@ func (c *RunCommand) Run(args []string) int {
 	flags.StringVar(&filename, "file", "gomoku.yml", "")
 	flags.StringVar(&filename, "f", "gomoku.yml", "")
 	flags.BoolVar(&verbose, "verbose", false, "")
-	flags.BoolVar(&verbose, "v", false, "")
 
 	if err := flags.Parse(args); err != nil {
 		return 1
@@ -63,9 +62,9 @@ func (c *RunCommand) Synopsis() string {
 func (c *RunCommand) Help() string {
 	helpText := `usage: gomoku run [OPTIONS...]
 Options:
-  --port, -p     Port number listened by gomoku HTTP server. By default, 8080.
-  --file, -f     Path to config file. By default, "./gomoku.yml".
-  --verbose, -v  Print verbosely. By default, false.
+  --port, -p  Port number listened by gomoku HTTP server. By default, 8080.
+  --file, -f  Path to config file. By default, "./gomoku.yml".
+  --verbose   Print verbosely. By default, false.
 `
 	return strings.TrimSpace(helpText)
 }
