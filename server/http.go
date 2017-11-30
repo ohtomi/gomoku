@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/pkg/errors"
 )
@@ -18,7 +19,7 @@ type CommandResult struct {
 
 type Conversation struct {
 	Method     string
-	URL        string
+	URL        *url.URL
 	Headers    map[string][]string
 	Form       map[string][]string
 	RemoteAddr string
