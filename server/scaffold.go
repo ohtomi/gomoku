@@ -35,8 +35,16 @@ func CreateScaffold(dirname string) error {
 			Response: Response{File: "baz.txt"},
 		},
 		{
-			Request:  Request{Route: "/static"},
+			Request:  Request{Route: "/static/html"},
 			Response: Response{File: ".{{ .URL.Path }}"},
+		},
+		{
+			Request:  Request{Route: "/static/js"},
+			Response: Response{File: ".{{ .URL.Path }}"},
+		},
+		{
+			Request:  Request{Route: "/static"},
+			Response: Response{Status: 308, Headers: map[string]string{"location": "/static/html/index.html"}},
 		},
 	}
 
