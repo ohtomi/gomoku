@@ -26,6 +26,12 @@
   revision = "83588e72410abfbe4df460eeb6f30841ae47d4c4"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/jessevdk/go-assets"
+  packages = ["."]
+  revision = "4f4301a06e153ff90e17793577ab6bf79f8dc5c5"
+
+[[projects]]
   name = "github.com/mattn/go-isatty"
   packages = ["."]
   revision = "0360b2af4f38e8d38c7fce2a9f4e702702d73a39"
@@ -35,7 +41,7 @@
   branch = "master"
   name = "github.com/mitchellh/cli"
   packages = ["."]
-  revision = "65fcae5817c8600da98ada9d7edf26dd1a84837b"
+  revision = "33edc47170b5df54d2588696d590c5e20ee583fe"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -53,7 +59,7 @@
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "4ff8c001ce4cc464e644b922325097228fce14d8"
+  revision = "8b4580aae2a0dd0c231a45d3ccb8434ff533b840"
 
 [[projects]]
   branch = "v2"
@@ -64,6 +70,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "e5b02782aa0ad6a21dcc98ae467b71e8de689acdf965630c7e3e6d66bb44b571"
+  inputs-digest = "3205f5f07867eca3dadf4d6c05055c64b92560278109b7b9ef89eec7507a4237"
   solver-name = "gps-cdcl"
   solver-version = 1
