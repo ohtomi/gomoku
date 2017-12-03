@@ -12,9 +12,9 @@ import (
 )
 
 type Config []struct {
-	Request  Request
-	Command  Command
-	Response Response
+	Request  Request  `yaml:",omitempty"`
+	Command  Command  `yaml:",omitempty"`
+	Response Response `yaml:",omitempty"`
 }
 
 type Command struct {
