@@ -5,11 +5,11 @@ import (
 )
 
 func (r *Request) Transform(conversation *Conversation, request *http.Request) error {
-	conversation.Method = request.Method
-	conversation.URL = request.URL
-	conversation.Headers = request.Header
-	conversation.Form = request.Form
-	conversation.RemoteAddr = request.RemoteAddr
+	conversation.Request.Method = request.Method
+	conversation.Request.URL = request.URL
+	conversation.Request.Headers = request.Header
+	conversation.Request.Form = request.Form
+	conversation.Request.RemoteAddr = request.RemoteAddr
 
 	return nil
 }

@@ -8,7 +8,6 @@ import (
 
 func (c *Command) Execute(conversation *Conversation) error {
 	if len(c.Path) == 0 {
-		conversation.CommandResult = &CommandResult{}
 		return nil
 	}
 
@@ -22,14 +21,12 @@ func (c *Command) Execute(conversation *Conversation) error {
 		return err
 	}
 
-	conversation.CommandResult = &CommandResult{
-		Env:    cmd.Env,
-		Path:   cmd.Path,
-		Args:   cmd.Args,
-		Dir:    cmd.Dir,
-		Stdout: strings.TrimRight(stdout.String(), "\n"),
-		Stderr: strings.TrimRight(stderr.String(), "\n"),
-	}
+	conversation.Command.Env = cmd.Env
+	conversation.Command.Path = cmd.Path
+	conversation.Command.Args = cmd.Args
+	conversation.Command.Dir = cmd.Dir
+	conversation.Command.Stdout = strings.TrimRight(stdout.String(), "\n")
+	conversation.Command.Stderr = strings.TrimRight(stderr.String(), "\n")
 
 	return nil
 }
