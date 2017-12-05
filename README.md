@@ -114,6 +114,20 @@ If `body` (or `template`) is defined in a same `response` block, the value of `b
 - `.Stdout`: standard output stream of executable command (`string`)
 - `.Stderr`: standard error stream of executable command (`string`)
 
+## Installation
+
+```console
+$ go get github.com/ohtomi/gomoku/cmd/gomoku
+```
+
+Or clone the [repository](https://github.com/ohtomi/gomoku) and run:
+```console
+$ make install
+```
+
+Or get binary from [release page](../../releases/latest).
+
+
 ## Contributing
 
 1. Fork it!
@@ -125,3 +139,7 @@ If `body` (or `template`) is defined in a same `response` block, the value of `b
 ## License
 
 MIT
+
+## Author
+
+[Kenichi Ohtomi](https://github.com/ohtomi)
