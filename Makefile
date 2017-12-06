@@ -45,7 +45,7 @@ package: clean go-assets-builder
 	@mkdir -p ./dist/$(VERSION)
 
 	@for platform in $(foreach os,$(GOX_OS),$(foreach arch,$(GOX_ARCH),$(os)_$(arch))) ; do \
-	  echo "zip ../../dist/$(VERSION)/xxx_$(VERSION)_$$platform.zip ./*" ; \
+	  echo "zip ../../dist/$(VERSION)/$(REPO)_$(VERSION)_$$platform.zip ./*" ; \
 	  (cd ./pkg/$$platform && zip ../../dist/$(VERSION)/$(REPO)_$(VERSION)_$$platform.zip ./*) ; \
 	done
 
