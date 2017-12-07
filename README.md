@@ -50,12 +50,13 @@ In `command` block, users can use `.Request` object at the inside of a template 
 ```yaml
 - command:
     env:
-      - HOGE=hoge
+    - GOMOKU=gomoku
+    - METHOD={{ .Request.Method }}
     path: python3
     args:
-      - -m
-      - foo
-      - '{{ .Request.URL.Path }}'
+    - -m
+    - foo
+    - '{{ .Request.URL.Path }}'
 ```
 
 #### env (type: `string=string`)
