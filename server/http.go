@@ -8,22 +8,26 @@ import (
 	"github.com/pkg/errors"
 )
 
+type RequestInConversation struct {
+	Method     string
+	URL        *url.URL
+	Headers    map[string][]string
+	Form       map[string][]string
+	RemoteAddr string
+}
+
+type CommandInConversation struct {
+	Env    []string
+	Path   string
+	Args   []string
+	Dir    string
+	Stdout string
+	Stderr string
+}
+
 type Conversation struct {
-	Request struct {
-		Method     string
-		URL        *url.URL
-		Headers    map[string][]string
-		Form       map[string][]string
-		RemoteAddr string
-	}
-	Command struct {
-		Env    []string
-		Path   string
-		Args   []string
-		Dir    string
-		Stdout string
-		Stderr string
-	}
+	Request RequestInConversation
+	Command CommandInConversation
 }
 
 func buildHandleFunc(config *Config, verbose bool) http.HandlerFunc {

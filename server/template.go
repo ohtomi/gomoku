@@ -2,8 +2,28 @@ package server
 
 import (
 	"bytes"
+	"encoding/json"
+	"strings"
 	"text/template"
 )
+
+func (c *CommandInConversation) StdoutToJson() interface{} {
+	var v interface{}
+	dec := json.NewDecoder(strings.NewReader(c.Stdout))
+	if err := dec.Decode(&v); err != nil {
+		return nil
+	}
+	return v
+}
+
+func (c *CommandInConversation) StderrToJson() interface{} {
+	var v interface{}
+	dec := json.NewDecoder(strings.NewReader(c.Stderr))
+	if err := dec.Decode(&v); err != nil {
+		return nil
+	}
+	return v
+}
 
 func ApplyTemplateText(name, text string, data interface{}) (string, error) {
 	buf := &bytes.Buffer{}

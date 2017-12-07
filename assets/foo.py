@@ -2,5 +2,11 @@
 
 import os
 import sys
+import json
 
-print('hello, {}. method is {}, url is {}'.format(os.environ['GOMOKU'], os.environ['METHOD'], sys.argv[1]))
+msg = {
+    'greet': 'hello, {}'.format(os.environ['GOMOKU']),
+    'method': os.environ['METHOD'],
+    'url': sys.argv[1]
+}
+print(json.dumps(msg))
