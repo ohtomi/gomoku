@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"strings"
 	"text/template"
+
+	"gopkg.in/yaml.v2"
 )
 
 func (c *CommandInConversation) StdoutToJson() interface{} {
@@ -16,10 +18,26 @@ func (c *CommandInConversation) StdoutToJson() interface{} {
 	return v
 }
 
+func (c *CommandInConversation) StdoutToYaml() interface{} {
+	var v interface{}
+	if err := yaml.Unmarshal([]byte(c.Stdout), &v); err != nil {
+		return nil
+	}
+	return v
+}
+
 func (c *CommandInConversation) StderrToJson() interface{} {
 	var v interface{}
 	dec := json.NewDecoder(strings.NewReader(c.Stderr))
 	if err := dec.Decode(&v); err != nil {
+		return nil
+	}
+	return v
+}
+
+func (c *CommandInConversation) StderrToYaml() interface{} {
+	var v interface{}
+	if err := yaml.Unmarshal([]byte(c.Stderr), &v); err != nil {
 		return nil
 	}
 	return v

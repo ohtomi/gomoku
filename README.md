@@ -112,8 +112,14 @@ If `body` (or `template`) is defined in a same `response` block, the value of `b
 - `.Path`: path to executable command (`string`)
 - `.Args`: command line arguments (`any array`)
 - `.Dir`: working directory (`string`)
+
 - `.Stdout`: standard output stream of executable command (`string`)
+- `.StdoutToJson`: `JSON` object made from `.Stdout` (`interface{}`)
+- `.StdoutToYaml`: `YAML` object made from `.Stdout` (`interface{}`)
+
 - `.Stderr`: standard error stream of executable command (`string`)
+- `.StderrToJson`: `JSON` object made from `.Stderr` (`interface{}`)
+- `.StderrToYaml`: `YAML` object made from `.Stderr` (`interface{}`)
 
 ## Installation
 
