@@ -94,3 +94,7 @@ func (c *Config) SaveToFile(filename string) error {
 
 	return nil
 }
+
+func (c *Config) ToYaml() ([]byte, error) {
+	return yaml.Marshal(c)
+}

@@ -67,7 +67,22 @@ func buildHandleFunc(config *Config, verbose bool) http.HandlerFunc {
 	}
 }
 
-func StartHttpServer(addr string, config *Config, verbose bool) error {
+func buildHandleFuncForWebUi(config *Config) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		out, err := config.ToYaml()
+		if err != nil {
+			return
+		}
+		w.Write([]byte("<!DOCTYPE html><html><body><pre>"))
+		w.Write(out)
+		w.Write([]byte("</pre></body></html>"))
+	}
+}
+
+func StartHttpServer(addr string, config *Config, useWebUi, verbose bool) error {
+	if useWebUi {
+		http.HandleFunc("/console", buildHandleFuncForWebUi(config))
+	}
 	http.HandleFunc("/", buildHandleFunc(config, verbose))
 	if err := http.ListenAndServe(addr, nil); err != nil {
 		return errors.Wrap(err, "failed to start http server")
