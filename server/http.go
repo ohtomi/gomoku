@@ -71,6 +71,7 @@ func buildHandleFuncForWebUi(config *Config) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		out, err := config.ToYaml()
 		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 		w.Write([]byte("<!DOCTYPE html><html><body><pre>"))
