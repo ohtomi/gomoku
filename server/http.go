@@ -30,7 +30,7 @@ type Conversation struct {
 	Command CommandInConversation
 }
 
-func buildHandleFunc(config *Config, verbose bool) http.HandlerFunc {
+func buildUserScriptHandler(config *Config, verbose bool) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cRequest, cCommand, cResponse := config.SelectConfigItem(r.Method, r.URL.Path)
 
@@ -67,7 +67,7 @@ func buildHandleFunc(config *Config, verbose bool) http.HandlerFunc {
 	}
 }
 
-func buildHandleFuncForWebUi(config *Config) http.HandlerFunc {
+func buildWebUiHandler(config *Config) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		out, err := config.ToYaml()
 		if err != nil {
@@ -82,9 +82,9 @@ func buildHandleFuncForWebUi(config *Config) http.HandlerFunc {
 
 func StartHttpServer(addr string, config *Config, webUi string, verbose bool) error {
 	if len(webUi) != 0 {
-		http.HandleFunc(webUi, buildHandleFuncForWebUi(config))
+		http.HandleFunc(webUi, buildWebUiHandler(config))
 	}
-	http.HandleFunc("/", buildHandleFunc(config, verbose))
+	http.HandleFunc("/", buildUserScriptHandler(config, verbose))
 	if err := http.ListenAndServe(addr, nil); err != nil {
 		return errors.Wrap(err, "failed to start http server")
 	}
