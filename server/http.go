@@ -80,9 +80,9 @@ func buildHandleFuncForWebUi(config *Config) http.HandlerFunc {
 	}
 }
 
-func StartHttpServer(addr string, config *Config, useWebUi, verbose bool) error {
-	if useWebUi {
-		http.HandleFunc("/console", buildHandleFuncForWebUi(config))
+func StartHttpServer(addr string, config *Config, webUi string, verbose bool) error {
+	if len(webUi) != 0 {
+		http.HandleFunc(webUi, buildHandleFuncForWebUi(config))
 	}
 	http.HandleFunc("/", buildHandleFunc(config, verbose))
 	if err := http.ListenAndServe(addr, nil); err != nil {

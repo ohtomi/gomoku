@@ -18,7 +18,7 @@ func (c *RunCommand) Run(args []string) int {
 	var (
 		port     int
 		filename string
-		useWebUi bool
+		webUi    string
 		verbose  bool
 	)
 
@@ -31,7 +31,7 @@ func (c *RunCommand) Run(args []string) int {
 	flags.IntVar(&port, "p", 8080, "")
 	flags.StringVar(&filename, "file", "gomoku.yml", "")
 	flags.StringVar(&filename, "f", "gomoku.yml", "")
-	flags.BoolVar(&useWebUi, "webui", false, "")
+	flags.StringVar(&webUi, "webui", "", "")
 	flags.BoolVar(&verbose, "verbose", false, "")
 
 	if err := flags.Parse(args); err != nil {
@@ -49,7 +49,7 @@ func (c *RunCommand) Run(args []string) int {
 		return 1
 	}
 
-	if err := server.StartHttpServer(fmt.Sprintf(":%d", port), config, useWebUi, verbose); err != nil {
+	if err := server.StartHttpServer(fmt.Sprintf(":%d", port), config, webUi, verbose); err != nil {
 		c.Ui.Error(err.Error())
 		return 1
 	}
@@ -66,7 +66,7 @@ func (c *RunCommand) Help() string {
 Options:
   --port, -p  Port number listened by gomoku HTTP server. By default, 8080.
   --file, -f  Path to config file. By default, "./gomoku.yml".
-  --webui     Enable web UI (/console). By default, false.
+  --webui     URL to web UI. e.g. "/console".
   --verbose   Print verbosely. By default, false.
 `
 	return strings.TrimSpace(helpText)
