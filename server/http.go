@@ -69,14 +69,14 @@ func buildUserScriptHandler(config *Config, verbose bool) http.HandlerFunc {
 
 func buildWebUiHandler(config *Config) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		out, err := config.ToYaml()
+		out, err := config.ToHtmlPanel()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		w.Write([]byte("<!DOCTYPE html><html><body><pre>"))
-		w.Write(out)
-		w.Write([]byte("</pre></body></html>"))
+		w.Write([]byte("<!DOCTYPE html><html><body>"))
+		w.Write([]byte(out))
+		w.Write([]byte("</body></html>"))
 	}
 }
 
