@@ -67,23 +67,7 @@ func buildUserScriptHandler(config *Config, verbose bool) http.HandlerFunc {
 	}
 }
 
-func buildWebUiHandler(config *Config) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		out, err := config.ToHtmlPanel()
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		w.Write([]byte("<!DOCTYPE html><html><body>"))
-		w.Write([]byte(out))
-		w.Write([]byte("</body></html>"))
-	}
-}
-
-func StartHttpServer(addr string, config *Config, webUi string, verbose bool) error {
-	if len(webUi) != 0 {
-		http.HandleFunc(webUi, buildWebUiHandler(config))
-	}
+func StartHttpServer(addr string, config *Config, verbose bool) error {
 	http.HandleFunc("/", buildUserScriptHandler(config, verbose))
 	if err := http.ListenAndServe(addr, nil); err != nil {
 		return errors.Wrap(err, "failed to start http server")
