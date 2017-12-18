@@ -21,16 +21,16 @@ $ curl -v http://localhost:8080/foo
 >
 < HTTP/1.1 200 OK
 < Content-Type: application/json; charset=utf-8
-< Date: Sat, 25 Nov 2017 15:05:39 GMT
-< Content-Length: 42
+< Date: Mon, 18 Dec 2017 23:53:07 GMT
+< Content-Length: 64
 <
 * Connection #0 to host localhost left intact
-{"greeting": "hello, gomoku. url is /foo"}
+{ "greeting": "hello, gomoku", "method": "GET", "url": "/foo" }
 ```
 
 ## Configuration
 
-### request
+### request block
 
 ```yaml
 - request:
@@ -44,7 +44,7 @@ $ curl -v http://localhost:8080/foo
 #### method (type: `regular expression`)
 `method` is a regular expression of a method of an HTTP request.
 
-### command
+### command block
 In `command` block, users can use `.Request` object at the inside of a template literal.
 
 ```yaml
@@ -68,7 +68,7 @@ In `command` block, users can use `.Request` object at the inside of a template 
 #### args (type: `any array`)
 `args` will be passed as command line arguments to executable command.
 
-### response
+### response block
 In `response` block, users can use `.Request` object and `.Command` object at the inside of a template literal.
 
 ```yaml
@@ -76,7 +76,12 @@ In `response` block, users can use `.Request` object and `.Command` object at th
     status: 200
     headers:
       content-type: application/json; charset=utf-8 
-    body: '{"greeting": "{{ .Command.Stdout }}"}'
+    body: >
+      {
+      "greeting": "{{ .Command.StdoutToJson.greet }}",
+      "method": "{{ .Command.StdoutToJson.method }}",
+      "url": "{{ .Command.StdoutToJson.url }}"
+      }
 ```
 
 #### status (type: `integer`)
@@ -93,38 +98,40 @@ To redirect, set `status` to `301`, `302`, `303`, `307`, `308`.
 #### template (type: `string`)
 `template` is a path to a template file representing an HTTP response body.
 
-If `body` is defined in a same `response` block, the value of `body` will be used as an HTTP response body.
+If `body` is defined in the same `response` block, the value of `body` will be used as an HTTP response body.
 
 #### file (type: `string`)
 `file` is a path to a content file representing an HTTP response body.
 
-If `body` (or `template`) is defined in a same `response` block, the value of `body` (or `template`) will be used as an HTTP response body.
+If `body` (or `template`) is defined in the same `response` block, the value of `body` (or `template`) will be used as an HTTP response body.
 
-### Built-in function
-- `GetByKey(map[string][]string, string)`: returns `string array`
-- `GetByIndex([]string, int)`: returns `string`
-- `JoinWith([]string, string)`: returns joined `string array`
+### Template built-in function
+- `.GetByKey(map of string to string, string)`: returns `string array`
+- `.GetByIndex(string array, integer)`: returns `string`
+- `.JoinWith(string array, string)`: returns joined `string array`
 
-### .Request object
+### Template variable
+
+#### `.Request` object
 - `.Method`: HTTP request method (`string`)
 - `.URL`: HTTP request URL (`net/url`'s `URL`)
 - `.Headers`: HTTP request headers (`map of string to string array`)
 - `.Form`: HTTP request form (`map of string to string array`)
 - `.RemoteAddr`: a remote address of an HTTP request (`string`)
 
-### .Command object
+#### `.Command` object
 - `.Env`: exported variables (`string=string array`)
 - `.Path`: path to executable command (`string`)
 - `.Args`: command line arguments (`any array`)
 - `.Dir`: working directory (`string`)
 
 - `.Stdout`: standard output stream of executable command (`string`)
-- `.StdoutToJson()`: returns `JSON` object made from `.Stdout` (`interface{}`)
-- `.StdoutToYaml()`: returns `YAML` object made from `.Stdout` (`interface{}`)
+- `.StdoutToJson()`: returns `JSON` object made from `.Stdout` (`map`)
+- `.StdoutToYaml()`: returns `YAML` object made from `.Stdout` (`map`)
 
 - `.Stderr`: standard error stream of executable command (`string`)
-- `.StderrToJson()`: returns `JSON` object made from `.Stderr` (`interface{}`)
-- `.StderrToYaml()`: returns `YAML` object made from `.Stderr` (`interface{}`)
+- `.StderrToJson()`: returns `JSON` object made from `.Stderr` (`map`)
+- `.StderrToYaml()`: returns `YAML` object made from `.Stderr` (`map`)
 
 ## Installation
 
