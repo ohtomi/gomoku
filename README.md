@@ -100,6 +100,11 @@ If `body` is defined in a same `response` block, the value of `body` will be use
 
 If `body` (or `template`) is defined in a same `response` block, the value of `body` (or `template`) will be used as an HTTP response body.
 
+### Built-in function
+- `GetByKey(map[string][]string, string)`: returns `string array`
+- `GetByIndex([]string, int)`: returns `string`
+- `JoinWith([]string, string)`: returns joined `string array`
+
 ### .Request object
 - `.Method`: HTTP request method (`string`)
 - `.URL`: HTTP request URL (`net/url`'s `URL`)
@@ -114,12 +119,12 @@ If `body` (or `template`) is defined in a same `response` block, the value of `b
 - `.Dir`: working directory (`string`)
 
 - `.Stdout`: standard output stream of executable command (`string`)
-- `.StdoutToJson`: `JSON` object made from `.Stdout` (`interface{}`)
-- `.StdoutToYaml`: `YAML` object made from `.Stdout` (`interface{}`)
+- `.StdoutToJson()`: returns `JSON` object made from `.Stdout` (`interface{}`)
+- `.StdoutToYaml()`: returns `YAML` object made from `.Stdout` (`interface{}`)
 
 - `.Stderr`: standard error stream of executable command (`string`)
-- `.StderrToJson`: `JSON` object made from `.Stderr` (`interface{}`)
-- `.StderrToYaml`: `YAML` object made from `.Stderr` (`interface{}`)
+- `.StderrToJson()`: returns `JSON` object made from `.Stderr` (`interface{}`)
+- `.StderrToYaml()`: returns `YAML` object made from `.Stderr` (`interface{}`)
 
 ## Installation
 

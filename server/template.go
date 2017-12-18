@@ -9,6 +9,18 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+func (c *Conversation) GetByKey(values map[string][]string, key string) interface{} {
+	return values[key]
+}
+
+func (c *Conversation) GetByIndex(values []string, index int) interface{} {
+	return values[index]
+}
+
+func (c *Conversation) JoinWith(values []string, sep string) string {
+	return strings.Join(values, sep)
+}
+
 func (c *CommandInConversation) StdoutToJson() interface{} {
 	var v interface{}
 	dec := json.NewDecoder(strings.NewReader(c.Stdout))
