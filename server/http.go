@@ -30,8 +30,18 @@ type Conversation struct {
 	Command CommandInConversation
 }
 
-func buildUserScriptHandler(config *Config, verbose bool) http.HandlerFunc {
+func buildUserScriptHandler(config *Config, cors, verbose bool) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		if cors {
+			if r.Method == "OPTIONS" {
+				w.Header().Set("Access-Control-Allow-Origin", r.RemoteAddr)
+				w.Header().Set("Access-Control-Allow-Headers", r.Header.Get("Access-Control-Request-Headers"))
+				w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+				w.WriteHeader(http.StatusOK)
+				return
+			}
+		}
+
 		cRequest, cCommand, cResponse := config.SelectConfigItem(r.Method, r.URL.Path)
 
 		if cRequest == nil || cCommand == nil || cResponse == nil {
@@ -67,8 +77,8 @@ func buildUserScriptHandler(config *Config, verbose bool) http.HandlerFunc {
 	}
 }
 
-func StartHttpServer(addr string, config *Config, verbose bool) error {
-	http.HandleFunc("/", buildUserScriptHandler(config, verbose))
+func StartHttpServer(addr string, config *Config, cors, verbose bool) error {
+	http.HandleFunc("/", buildUserScriptHandler(config, cors, verbose))
 	if err := http.ListenAndServe(addr, nil); err != nil {
 		return errors.Wrap(err, "failed to start http server")
 	}
