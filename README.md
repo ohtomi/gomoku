@@ -105,7 +105,7 @@ If `body` is defined in the same `response` block, the value of `body` will be u
 
 If `body` (or `template`) is defined in the same `response` block, the value of `body` (or `template`) will be used as an HTTP response body.
 
-### Template built-in function
+### Template function
 - `.GetByKey(map of string to string, string)`: returns `string array`
 - `.GetByIndex(string array, integer)`: returns `string`
 - `.JoinWith(string array, string)`: returns joined `string array`
