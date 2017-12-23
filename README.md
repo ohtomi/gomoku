@@ -59,7 +59,7 @@ In `command` block, users can use `.Request` object at the inside of a template 
     - '{{ .Request.URL.Path }}'
 ```
 
-#### env (type: `string=string`)
+#### env (type: `string=string array`)
 `env` will be exported before executing command.
 
 #### path (type: `string`)
