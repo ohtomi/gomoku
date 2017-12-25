@@ -36,6 +36,7 @@ $ curl -v http://localhost:8080/foo
 - request:
     route: /foo
     method: get|post
+    multipart: false
 ```
 
 #### route (type: `regular expression`)
@@ -43,6 +44,9 @@ $ curl -v http://localhost:8080/foo
 
 #### method (type: `regular expression`)
 `method` is a regular expression of a method of an HTTP request.
+
+#### multipart (type: `bool`)
+`multipart` is a flag. If `true`, multi-part form will be acceptable.
 
 ### command block
 In `command` block, users can use `.Request` object at the inside of a template literal.

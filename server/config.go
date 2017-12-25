@@ -24,8 +24,9 @@ type Command struct {
 }
 
 type Request struct {
-	Route  string `yaml:",omitempty"`
-	Method string `yaml:",omitempty"`
+	Route     string `yaml:",omitempty"`
+	Method    string `yaml:",omitempty"`
+	MultiPart bool   `yaml:",omitempty"`
 }
 
 type Response struct {
