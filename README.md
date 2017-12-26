@@ -114,8 +114,8 @@ If `body` (or `template`) is defined in the same `response` block, the value of 
 - `.GetByIndex(string array, integer)`: returns `string`
 - `.JoinWith(string array, string)`: returns joined `string array`
 
-- `.ReadFile(string)`: returns `string` from the first of uploaded file
-- `.ReadFiles(string)`: returns `string` from uploaded files
+- `.ReadFile(string)`: returns `string` that is a content of the first of uploaded file
+- `.ReadFiles(string)`: returns `string array` that is a list of a content of uploaded files
 
 ### Template variable
 
