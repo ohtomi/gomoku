@@ -3,6 +3,7 @@ package server
 import (
 	"bytes"
 	"encoding/json"
+	"io/ioutil"
 	"strings"
 	"text/template"
 
@@ -19,6 +20,26 @@ func (c *Conversation) GetByIndex(values []string, index int) interface{} {
 
 func (c *Conversation) JoinWith(values []string, sep string) string {
 	return strings.Join(values, sep)
+}
+
+func (c *Conversation) ReadFile(filename string) string {
+	contents := c.ReadFiles(filename)
+	if len(contents) == 0 {
+		return ""
+	}
+	return contents[0]
+}
+
+func (c *Conversation) ReadFiles(filename string) []string {
+	contents := make([]string, len(c.Request.Form[filename]))
+	for i, tempfile := range c.Request.Form[filename] {
+		if buf, err := ioutil.ReadFile(tempfile); err != nil {
+			contents[i] = ""
+		} else {
+			contents[i] = string(buf)
+		}
+	}
+	return contents
 }
 
 func (c *CommandInConversation) StdoutToJson() interface{} {
