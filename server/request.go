@@ -14,30 +14,21 @@ func (r *Request) Transform(conversation *Conversation, request *http.Request) e
 	conversation.Request.Headers = request.Header
 	conversation.Request.RemoteAddr = request.RemoteAddr
 
-	var contentType string
-	if header, ok := request.Header["content-type"]; ok {
-		contentType = header[0]
-	} else if header, ok := request.Header["Content-Type"]; ok {
-		contentType = header[0]
-	} else {
-		contentType = "text/plain"
-	}
-
-	if err := r.readBody(conversation, request, contentType); err != nil {
+	if err := r.readBody(conversation, request); err != nil {
 		return err
 	}
-	if err := r.readForm(conversation, request, contentType); err != nil {
+	if err := r.readForm(conversation, request); err != nil {
 		return err
 	}
-	if err := r.readMultipartForm(conversation, request, contentType); err != nil {
+	if err := r.readMultipartForm(conversation, request); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (r *Request) readBody(conversation *Conversation, request *http.Request, contentType string) error {
-	if strings.HasPrefix(contentType, "application/x-www-form-urlencoded") || strings.HasPrefix(contentType, "multipart/form-data") {
+func (r *Request) readBody(conversation *Conversation, request *http.Request) error {
+	if strings.HasPrefix(request.Header.Get("content-type"), "application/x-www-form-urlencoded") || strings.HasPrefix(request.Header.Get("content-type"), "multipart/form-data") {
 		return nil
 	}
 
@@ -50,8 +41,8 @@ func (r *Request) readBody(conversation *Conversation, request *http.Request, co
 	return nil
 }
 
-func (r *Request) readForm(conversation *Conversation, request *http.Request, contentType string) error {
-	if !strings.HasPrefix(contentType, "application/x-www-form-urlencoded") {
+func (r *Request) readForm(conversation *Conversation, request *http.Request) error {
+	if !strings.HasPrefix(request.Header.Get("content-type"), "application/x-www-form-urlencoded") {
 		return nil
 	}
 
@@ -63,8 +54,8 @@ func (r *Request) readForm(conversation *Conversation, request *http.Request, co
 	return nil
 }
 
-func (r *Request) readMultipartForm(conversation *Conversation, request *http.Request, contentType string) error {
-	if !strings.HasPrefix(contentType, "multipart/form-data") {
+func (r *Request) readMultipartForm(conversation *Conversation, request *http.Request) error {
+	if !strings.HasPrefix(request.Header.Get("content-type"), "multipart/form-data") {
 		return nil
 	}
 
