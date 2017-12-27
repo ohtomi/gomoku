@@ -123,8 +123,13 @@ If `body` (or `template`) is defined in the same `response` block, the value of 
 - `.Method`: HTTP request method (`string`)
 - `.URL`: HTTP request URL (`net/url`'s `URL`)
 - `.Headers`: HTTP request headers (`map of string to string array`)
-- `.Form`: HTTP request form (`map of string to string array`)
 - `.RemoteAddr`: a remote address of an HTTP request (`string`)
+
+- `.Body`: HTTP request body (`string` or `map`)
+- `.BodyToJson()`: returns `JSON` object made from `.Body` (`map`)
+- `.BodyToYaml()`: returns `YAML` object made from `.Body` (`map`)
+
+- `.Form`: HTTP request form (`map of string to string array`)
 
 #### `.Command` object
 - `.Env`: exported variables (`string=string array`)

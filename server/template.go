@@ -42,6 +42,23 @@ func (c *Conversation) ReadFiles(filename string) []string {
 	return contents
 }
 
+func (r *RequestInConversation) BodyToJson() interface{} {
+	var v interface{}
+	dec := json.NewDecoder(strings.NewReader(r.Body))
+	if err := dec.Decode(&v); err != nil {
+		return nil
+	}
+	return v
+}
+
+func (r *RequestInConversation) BodyToYaml() interface{} {
+	var v interface{}
+	if err := yaml.Unmarshal([]byte(r.Body), &v); err != nil {
+		return nil
+	}
+	return v
+}
+
 func (c *CommandInConversation) StdoutToJson() interface{} {
 	var v interface{}
 	dec := json.NewDecoder(strings.NewReader(c.Stdout))

@@ -12,6 +12,7 @@ type RequestInConversation struct {
 	Method     string
 	URL        *url.URL
 	Headers    map[string][]string
+	Body       string
 	Form       map[string][]string
 	RemoteAddr string
 }
