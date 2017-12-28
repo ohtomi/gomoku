@@ -55,7 +55,7 @@ func NewConfig(filename string) (*Config, error) {
 	return &config, nil
 }
 
-func (c *Config) SelectConfigItem(method, path string, headers http.Header) (*Request, *Command, *Response) {
+func (c *Config) SelectConfigItem(method, path string, headers http.Header) (*Request, *Command, *Response, bool) {
 	for _, element := range *c {
 		if len(element.Request.Method) != 0 {
 			if !regexp.MustCompile(fmt.Sprintf("(?i)%s", element.Request.Method)).MatchString(method) {
@@ -75,9 +75,9 @@ func (c *Config) SelectConfigItem(method, path string, headers http.Header) (*Re
 				continue
 			}
 		}
-		return &element.Request, &element.Command, &element.Response
+		return &element.Request, &element.Command, &element.Response, true
 	}
-	return nil, nil, nil
+	return nil, nil, nil, false
 }
 
 func matchHeaders(expected map[string]string, actual http.Header) bool {

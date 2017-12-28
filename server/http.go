@@ -43,9 +43,9 @@ func buildUserScriptHandler(config *Config, cors, verbose bool) http.HandlerFunc
 			}
 		}
 
-		cRequest, cCommand, cResponse := config.SelectConfigItem(r.Method, r.URL.Path, r.Header)
+		cRequest, cCommand, cResponse, found := config.SelectConfigItem(r.Method, r.URL.Path, r.Header)
 
-		if cRequest == nil || cCommand == nil || cResponse == nil {
+		if !found {
 			w.WriteHeader(http.StatusOK)
 			return
 		}
