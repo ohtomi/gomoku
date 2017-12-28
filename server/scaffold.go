@@ -20,7 +20,7 @@ func CreateScaffold(dirname string) error {
 
 	config := &Config{
 		{
-			Request:  Request{Route: "/foo", Method: "get|post"},
+			Request:  Request{Route: "/foo", Method: "get|post", Headers: map[string]string{"x-gomoku": "yes"}},
 			Command:  Command{Path: "python3", Args: []string{"-m", "foo", "{{ .Request.URL.Path }}"}, Env: []string{"GOMOKU=gomoku", "METHOD={{ .Request.Method }}"}},
 			Response: Response{Status: 200, Headers: map[string]string{"content-type": "application/json; charset=utf-8"}, Body: "{\"greeting\": \"{{ .Command.StdoutToJson.greet }}\", \"method\": \"{{ .Command.StdoutToJson.method }}\", \"url\": \"{{ .Command.StdoutToJson.url }}\"}"},
 		},

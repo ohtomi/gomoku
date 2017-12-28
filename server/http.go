@@ -12,9 +12,9 @@ type RequestInConversation struct {
 	Method     string
 	URL        *url.URL
 	Headers    map[string][]string
+	RemoteAddr string
 	Body       string
 	Form       map[string][]string
-	RemoteAddr string
 }
 
 type CommandInConversation struct {
@@ -43,7 +43,7 @@ func buildUserScriptHandler(config *Config, cors, verbose bool) http.HandlerFunc
 			}
 		}
 
-		cRequest, cCommand, cResponse := config.SelectConfigItem(r.Method, r.URL.Path)
+		cRequest, cCommand, cResponse := config.SelectConfigItem(r.Method, r.URL.Path, r.Header)
 
 		if cRequest == nil || cCommand == nil || cResponse == nil {
 			w.WriteHeader(http.StatusOK)

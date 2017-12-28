@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"regexp"
 	"strings"
@@ -24,8 +25,9 @@ type Command struct {
 }
 
 type Request struct {
-	Route  string `yaml:",omitempty"`
-	Method string `yaml:",omitempty"`
+	Route   string            `yaml:",omitempty"`
+	Method  string            `yaml:",omitempty"`
+	Headers map[string]string `yaml:",omitempty"`
 }
 
 type Response struct {
@@ -53,7 +55,7 @@ func NewConfig(filename string) (*Config, error) {
 	return &config, nil
 }
 
-func (c *Config) SelectConfigItem(method, path string) (*Request, *Command, *Response) {
+func (c *Config) SelectConfigItem(method, path string, headers http.Header) (*Request, *Command, *Response) {
 	for _, element := range *c {
 		if len(element.Request.Method) != 0 {
 			if !regexp.MustCompile(fmt.Sprintf("(?i)%s", element.Request.Method)).MatchString(method) {
@@ -65,6 +67,18 @@ func (c *Config) SelectConfigItem(method, path string) (*Request, *Command, *Res
 				path = fmt.Sprintf("%s/", path)
 			}
 			if !regexp.MustCompile(fmt.Sprintf("^%s/", strings.TrimRight(element.Request.Route, "/"))).MatchString(path) {
+				continue
+			}
+		}
+		if len(element.Request.Headers) != 0 {
+			unmatched := false
+			for k, v := range element.Request.Headers {
+				if !regexp.MustCompile(fmt.Sprintf("^%s", v)).MatchString(headers.Get(k)) {
+					unmatched = true
+					break
+				}
+			}
+			if unmatched {
 				continue
 			}
 		}

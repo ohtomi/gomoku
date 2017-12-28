@@ -11,21 +11,22 @@ $ gomoku init sample
 $ cd sample
 $ gomoku run --port 8080 --file ./gomoku.yml
 
-$ curl -v http://localhost:8080/foo
+$ curl -v -H 'x-gomoku:yes' http://localhost:8080/foo
 *   Trying ::1...
 * Connected to localhost (::1) port 8080 (#0)
 > GET /foo HTTP/1.1
 > Host: localhost:8080
 > User-Agent: curl/7.43.0
 > Accept: */*
+> x-gomoku:yes
 >
 < HTTP/1.1 200 OK
 < Content-Type: application/json; charset=utf-8
-< Date: Mon, 18 Dec 2017 23:53:07 GMT
-< Content-Length: 64
+< Date: Thu, 28 Dec 2017 14:17:23 GMT
+< Content-Length: 61
 <
 * Connection #0 to host localhost left intact
-{ "greeting": "hello, gomoku", "method": "GET", "url": "/foo" }
+{"greeting": "hello, gomoku", "method": "GET", "url": "/foo"}
 ```
 
 ## Configuration
@@ -36,6 +37,8 @@ $ curl -v http://localhost:8080/foo
 - request:
     route: /foo
     method: get|post
+    headers:
+      x-gomoku: yes
 ```
 
 #### route (type: `regular expression`)
@@ -43,6 +46,9 @@ $ curl -v http://localhost:8080/foo
 
 #### method (type: `regular expression`)
 `method` is a regular expression of an HTTP request method.
+
+#### headers (type: `map of string to string`)
+`headers` is a list of a regular expression of an HTTP request headers.
 
 ### command block
 In `command` block, users can use `.Request` object at the inside of a template literal.
