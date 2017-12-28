@@ -25,8 +25,8 @@ type Command struct {
 }
 
 type Request struct {
-	Route   string            `yaml:",omitempty"`
 	Method  string            `yaml:",omitempty"`
+	Route   string            `yaml:",omitempty"`
 	Headers map[string]string `yaml:",omitempty"`
 }
 

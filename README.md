@@ -35,19 +35,19 @@ $ curl -v -H 'x-gomoku:yes' http://localhost:8080/foo
 
 ```yaml
 - request:
-    route: /foo
     method: get|post
+    route: /foo
     headers:
       x-gomoku: yes
 ```
 
-#### route (type: `regular expression`)
-`route` is a regular expression of an HTTP request URL.
-
 #### method (type: `regular expression`)
 `method` is a regular expression of an HTTP request method.
 
-#### headers (type: `map of string to string`)
+#### route (type: `regular expression`)
+`route` is a regular expression of an HTTP request URL.
+
+#### headers (type: `map of string to regular expression`)
 `headers` is a list of a regular expression of an HTTP request headers.
 
 ### command block
