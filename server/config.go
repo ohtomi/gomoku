@@ -71,20 +71,22 @@ func (c *Config) SelectConfigItem(method, path string, headers http.Header) (*Re
 			}
 		}
 		if len(element.Request.Headers) != 0 {
-			unmatched := false
-			for k, v := range element.Request.Headers {
-				if !regexp.MustCompile(fmt.Sprintf("^%s", v)).MatchString(headers.Get(k)) {
-					unmatched = true
-					break
-				}
-			}
-			if unmatched {
+			if !matchHeaders(element.Request.Headers, headers) {
 				continue
 			}
 		}
 		return &element.Request, &element.Command, &element.Response
 	}
 	return nil, nil, nil
+}
+
+func matchHeaders(expected map[string]string, actual http.Header) bool {
+	for k, v := range expected {
+		if !regexp.MustCompile(fmt.Sprintf("^%s", v)).MatchString(actual.Get(k)) {
+			return false
+		}
+	}
+	return true
 }
 
 func (c *Config) SaveToFile(filename string) error {
