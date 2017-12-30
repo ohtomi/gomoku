@@ -16,10 +16,11 @@ type RunCommand struct {
 
 func (c *RunCommand) Run(args []string) int {
 	var (
-		port     int
-		filename string
-		cors     bool
-		verbose  bool
+		port         int
+		filename     string
+		cors         bool
+		verbose      bool
+		errorNoMatch bool
 	)
 
 	flags := flag.NewFlagSet("run", flag.ContinueOnError)
@@ -33,6 +34,7 @@ func (c *RunCommand) Run(args []string) int {
 	flags.StringVar(&filename, "f", "gomoku.yml", "")
 	flags.BoolVar(&cors, "cors", false, "")
 	flags.BoolVar(&verbose, "verbose", false, "")
+	flags.BoolVar(&errorNoMatch, "error-no-match", false, "")
 
 	if err := flags.Parse(args); err != nil {
 		return 1
@@ -49,7 +51,7 @@ func (c *RunCommand) Run(args []string) int {
 		return 1
 	}
 
-	if err := server.StartHttpServer(fmt.Sprintf(":%d", port), config, cors, verbose); err != nil {
+	if err := server.StartHttpServer(fmt.Sprintf(":%d", port), config, cors, verbose, errorNoMatch); err != nil {
 		c.Ui.Error(err.Error())
 		return 1
 	}
@@ -68,6 +70,8 @@ Options:
   --file, -f  Path to config file. By default, "./gomoku.yml".
   --cors      Enable CORS suppport. By default, false.
   --verbose   Print verbosely. By default, false.
+  --error-no-match
+              Respond 500 internal server error. By default, false (= respond 200 OK).
 `
 	return strings.TrimSpace(helpText)
 }

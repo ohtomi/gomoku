@@ -31,7 +31,7 @@ type Conversation struct {
 	Command CommandInConversation
 }
 
-func buildUserScriptHandler(config *Config, cors, verbose bool) http.HandlerFunc {
+func buildUserScriptHandler(config *Config, cors, verbose, errorNoMatch bool) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if cors {
 			if r.Method == "OPTIONS" {
@@ -46,7 +46,11 @@ func buildUserScriptHandler(config *Config, cors, verbose bool) http.HandlerFunc
 		cRequest, cCommand, cResponse, found := config.SelectConfigItem(r.Method, r.URL.Path, r.Header)
 
 		if !found {
-			w.WriteHeader(http.StatusOK)
+			if errorNoMatch {
+				w.WriteHeader(http.StatusInternalServerError)
+			} else {
+				w.WriteHeader(http.StatusOK)
+			}
 			return
 		}
 
@@ -78,8 +82,8 @@ func buildUserScriptHandler(config *Config, cors, verbose bool) http.HandlerFunc
 	}
 }
 
-func StartHttpServer(addr string, config *Config, cors, verbose bool) error {
-	http.HandleFunc("/", buildUserScriptHandler(config, cors, verbose))
+func StartHttpServer(addr string, config *Config, cors, verbose, errorNoMatch bool) error {
+	http.HandleFunc("/", buildUserScriptHandler(config, cors, verbose, errorNoMatch))
 	if err := http.ListenAndServe(addr, nil); err != nil {
 		return errors.Wrap(err, "failed to start http server")
 	}
