@@ -1,3 +1,23 @@
+## 0.3.0 (2018-12-31)
+
+### Added
+
+- Add header matcher to `request` block
+- Add `post body` support
+- Add `multi-part form` support
+
+- Add functions to template directive
+  - to make `JSON` object from request body
+  - to make `YAML` object from request body
+  - to read content from uploaded file
+  - to read contents from uploaded files
+
+- Respond 500 internal server error if `--error-no-match` enabled
+
+### Fixed
+
+- Fix empty form in conversation bug
+
 ## 0.2.0 (2017-12-22)
 
 ### Added
