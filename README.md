@@ -111,7 +111,11 @@ If `body` is defined in the same `response` block, the value of `body` will be u
 
 If `body` (or `template`) is defined in the same `response` block, the value of `body` (or `template`) will be used as an HTTP response body.
 
-### Template function
+## Template
+
+To generate textual outputs, see an API document of the [Go standard template engine](https://golang.org/pkg/text/template/).
+
+## function
 - `.GetByKey(map of string to string, string)`: returns `string array`
 - `.GetByIndex(string array, integer)`: returns `string`
 - `.JoinWith(string array, string)`: returns joined `string array`
@@ -119,9 +123,9 @@ If `body` (or `template`) is defined in the same `response` block, the value of 
 - `.ReadFile(string)`: returns `string` that is a content of the first of uploaded file
 - `.ReadFiles(string)`: returns `string array` that is a list of a content of uploaded files
 
-### Template variable
+## variable
 
-#### `.Request` object
+### `.Request` object
 - `.Method`: HTTP request method (`string`)
 - `.URL`: HTTP request URL (`net/url`'s `URL`)
 - `.Headers`: HTTP request headers (`map of string to string array`)
@@ -133,7 +137,7 @@ If `body` (or `template`) is defined in the same `response` block, the value of 
 
 - `.Form`: HTTP request form (`map of string to string array`)
 
-#### `.Command` object
+### `.Command` object
 - `.Env`: exported variables (`string=string array`)
 - `.Path`: path to executable command (`string`)
 - `.Args`: command line arguments (`any array`)
