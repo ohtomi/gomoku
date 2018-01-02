@@ -1,0 +1,14 @@
+- request:
+    route: /html
+  response:
+    file: .{{ .Request.URL.Path }}
+- request:
+    route: /js
+  response:
+    file: .{{ .Request.URL.Path }}
+- request:
+    route: /
+  response:
+    status: 308
+    headers:
+      location: /html/index.html
