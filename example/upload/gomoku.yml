@@ -1,0 +1,13 @@
+- request:
+    route: /api
+    method: post
+    headers:
+      content-type: multipart/form-data
+  command:
+    path: /usr/bin/head
+    args:
+    - -n
+    - 1
+    - '{{ .GetByIndex ( .GetByKey .Request.Form "f" ) 0 }}'
+  response:
+    body: "{{ .Command.Stdout }}\n"
