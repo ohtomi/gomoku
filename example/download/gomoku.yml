@@ -1,0 +1,8 @@
+- request:
+    route: /api
+    method: get|post
+  response:
+    headers:
+      content-disposition: attachment; filename=save-as-50.png
+      content-type: image/png
+    file: icons8-save-as-50.png
