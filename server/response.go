@@ -8,19 +8,14 @@ import (
 )
 
 func (r *Response) Write(conversation *Conversation, writer http.ResponseWriter) error {
-	var (
-		tContent string
-		bContent []byte
-		lContent int
-	)
+	var content []byte
 
 	if len(r.Body) != 0 {
 		applied, err := ApplyTemplateText("body", r.Body, conversation)
 		if err != nil {
 			return err
 		}
-		tContent = applied
-		lContent = len(tContent)
+		content = []byte(applied)
 	} else if len(r.Template) != 0 {
 		template, err := ApplyTemplateText("template", r.Template, conversation)
 		if err != nil {
@@ -30,8 +25,7 @@ func (r *Response) Write(conversation *Conversation, writer http.ResponseWriter)
 		if err != nil {
 			return err
 		}
-		tContent = applied
-		lContent = len(tContent)
+		content = []byte(applied)
 	} else if len(r.File) != 0 {
 		file, err := ApplyTemplateText("file", r.File, conversation)
 		if err != nil {
@@ -41,12 +35,9 @@ func (r *Response) Write(conversation *Conversation, writer http.ResponseWriter)
 		if err != nil {
 			return err
 		}
-		bContent = read
-		lContent = len(bContent)
+		content = read
 	} else {
-		tContent = ""
-		bContent = []byte{}
-		lContent = 0
+		content = []byte{}
 	}
 
 	for key, value := range r.Headers {
@@ -56,7 +47,7 @@ func (r *Response) Write(conversation *Conversation, writer http.ResponseWriter)
 		}
 		writer.Header().Set(key, value)
 	}
-	writer.Header().Set("content-length", fmt.Sprintf("%d", lContent))
+	writer.Header().Set("content-length", fmt.Sprintf("%d", len(content)))
 
 	if r.Status == 0 {
 		writer.WriteHeader(http.StatusOK)
@@ -64,10 +55,8 @@ func (r *Response) Write(conversation *Conversation, writer http.ResponseWriter)
 		writer.WriteHeader(r.Status)
 	}
 
-	if len(tContent) != 0 {
-		fmt.Fprintf(writer, tContent)
-	} else if len(bContent) != 0 {
-		writer.Write(bContent)
+	if len(content) != 0 {
+		writer.Write(content)
 	}
 
 	return nil
