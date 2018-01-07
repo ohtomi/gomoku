@@ -59,7 +59,10 @@ release: package
 fmt:
 	gofmt -w .
 
+dep:
+	dep ensure
+
 go-assets-builder:
 	@+$(MAKE) -C server
 
-.PHONY: build test test-race vet clean install package release fmt go-assets-builder
+.PHONY: build test test-race vet clean install package release fmt dep go-assets-builder
