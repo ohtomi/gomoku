@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"reflect"
 	"regexp"
 	"strings"
 
@@ -12,7 +13,9 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-type Config []struct {
+type Config []ConfigItem
+
+type ConfigItem struct {
 	Request  Request  `yaml:",omitempty"`
 	Command  Command  `yaml:",omitempty"`
 	Response Response `yaml:",omitempty"`
@@ -113,4 +116,12 @@ func (c *Config) SaveToFile(filename string) error {
 
 func (c *Config) ToYaml() ([]byte, error) {
 	return yaml.Marshal(c)
+}
+
+func (c *Config) EqualTo(other *Config) bool {
+	if len(*c) != len(*other) {
+		return false
+	}
+
+	return reflect.DeepEqual(*c, *other)
 }

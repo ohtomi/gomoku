@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/ohtomi/gomoku/server"
 )
@@ -50,6 +51,22 @@ func (c *RunCommand) Run(args []string) int {
 		c.Ui.Error(err.Error())
 		return 1
 	}
+
+	go func() {
+		ticker := time.Tick(10 * time.Second)
+		for _ = range ticker {
+			newConfig, err := server.NewConfig(filepath.Base(filename))
+			if err != nil {
+				c.Ui.Error(err.Error())
+				continue
+			}
+			if config.EqualTo(newConfig) {
+				continue
+			}
+			c.Ui.Output(fmt.Sprintf("Updated configuration [%s]", filename))
+			copy(*config, *newConfig)
+		}
+	}()
 
 	if err := server.StartHttpServer(fmt.Sprintf(":%d", port), config, cors, verbose, errorNoMatch); err != nil {
 		c.Ui.Error(err.Error())
