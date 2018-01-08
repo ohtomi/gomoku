@@ -52,34 +52,34 @@ func CreateScaffold(dirname string) error {
 		return err
 	}
 
-	if err := unpackFromBindataToFile(filepath.Join(dirname, "foo.py"), "foo.py"); err != nil {
+	if err := unpackBindataToFile(filepath.Join(dirname, "foo.py"), "foo.py"); err != nil {
 		return err
 	}
 
-	if err := unpackFromBindataToFile(filepath.Join(dirname, "bar.py"), "bar.py"); err != nil {
+	if err := unpackBindataToFile(filepath.Join(dirname, "bar.py"), "bar.py"); err != nil {
 		return err
 	}
 
-	if err := unpackFromBindataToFile(filepath.Join(dirname, "bar.tmpl"), "bar.tmpl"); err != nil {
+	if err := unpackBindataToFile(filepath.Join(dirname, "bar.tmpl"), "bar.tmpl"); err != nil {
 		return err
 	}
 
-	if err := unpackFromBindataToFile(filepath.Join(dirname, "baz.py"), "baz.py"); err != nil {
+	if err := unpackBindataToFile(filepath.Join(dirname, "baz.py"), "baz.py"); err != nil {
 		return err
 	}
 
-	if err := unpackFromBindataToFile(filepath.Join(dirname, "static/html/index.html"), "static/html/index.html"); err != nil {
+	if err := unpackBindataToFile(filepath.Join(dirname, "static/html/index.html"), "static/html/index.html"); err != nil {
 		return err
 	}
 
-	if err := unpackFromBindataToFile(filepath.Join(dirname, "static/js/page.js"), "static/js/page.js"); err != nil {
+	if err := unpackBindataToFile(filepath.Join(dirname, "static/js/page.js"), "static/js/page.js"); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func unpackFromBindataToFile(filename, resource string) error {
+func unpackBindataToFile(filename, resource string) error {
 	if _, err := os.Stat(filename); err == nil {
 		return errors.New(fmt.Sprintf("unable to create file: %q already exists", filename))
 	}
