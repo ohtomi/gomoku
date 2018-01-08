@@ -58,7 +58,7 @@ func NewConfig(filename string) (*Config, error) {
 	return &config, nil
 }
 
-func (c *Config) SelectConfigItem(method, path string, headers http.Header) (*Request, *Command, *Response, bool) {
+func (c *Config) SelectConfigItem(method, route string, headers http.Header) (*Request, *Command, *Response, bool) {
 	for _, element := range *c {
 		if len(element.Request.Method) != 0 {
 			if !regexp.MustCompile(fmt.Sprintf("(?i)%s", element.Request.Method)).MatchString(method) {
@@ -66,10 +66,10 @@ func (c *Config) SelectConfigItem(method, path string, headers http.Header) (*Re
 			}
 		}
 		if len(element.Request.Route) != 0 {
-			if !strings.HasSuffix(path, "/") {
-				path = fmt.Sprintf("%s/", path)
+			if !strings.HasSuffix(route, "/") {
+				route = fmt.Sprintf("%s/", route)
 			}
-			if !regexp.MustCompile(fmt.Sprintf("^%s/", strings.TrimRight(element.Request.Route, "/"))).MatchString(path) {
+			if !regexp.MustCompile(fmt.Sprintf("^%s/", strings.TrimRight(element.Request.Route, "/"))).MatchString(route) {
 				continue
 			}
 		}
