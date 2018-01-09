@@ -84,9 +84,9 @@ In `response` block, users can use `.Request` object and `.Command` object at th
       content-type: application/json; charset=utf-8 
     body: >
       {
-      "greeting": "{{ .Command.StdoutToJson.greet }}",
-      "method": "{{ .Command.StdoutToJson.method }}",
-      "url": "{{ .Command.StdoutToJson.url }}"
+      "greeting": "{{ .Command.ParseStdoutAsJson.greet }}",
+      "method": "{{ .Command.ParseStdoutAsJson.method }}",
+      "url": "{{ .Command.ParseStdoutAsJson.url }}"
       }
 ```
 
