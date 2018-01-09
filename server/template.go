@@ -42,7 +42,7 @@ func (c *Conversation) ReadFiles(filename string) []string {
 	return contents
 }
 
-func (r *RequestInConversation) BodyToJson() interface{} {
+func (r *RequestInConversation) ParseBodyAsJson() interface{} {
 	var v interface{}
 	dec := json.NewDecoder(strings.NewReader(r.Body))
 	if err := dec.Decode(&v); err != nil {
@@ -51,7 +51,7 @@ func (r *RequestInConversation) BodyToJson() interface{} {
 	return v
 }
 
-func (r *RequestInConversation) BodyToYaml() interface{} {
+func (r *RequestInConversation) ParseBodyAsYaml() interface{} {
 	var v interface{}
 	if err := yaml.Unmarshal([]byte(r.Body), &v); err != nil {
 		return nil
@@ -59,7 +59,7 @@ func (r *RequestInConversation) BodyToYaml() interface{} {
 	return v
 }
 
-func (c *CommandInConversation) StdoutToJson() interface{} {
+func (c *CommandInConversation) ParseStdoutAsJson() interface{} {
 	var v interface{}
 	dec := json.NewDecoder(strings.NewReader(c.Stdout))
 	if err := dec.Decode(&v); err != nil {
@@ -68,7 +68,7 @@ func (c *CommandInConversation) StdoutToJson() interface{} {
 	return v
 }
 
-func (c *CommandInConversation) StdoutToYaml() interface{} {
+func (c *CommandInConversation) ParseStdoutAsYaml() interface{} {
 	var v interface{}
 	if err := yaml.Unmarshal([]byte(c.Stdout), &v); err != nil {
 		return nil
@@ -76,7 +76,7 @@ func (c *CommandInConversation) StdoutToYaml() interface{} {
 	return v
 }
 
-func (c *CommandInConversation) StderrToJson() interface{} {
+func (c *CommandInConversation) ParseStderrAsJson() interface{} {
 	var v interface{}
 	dec := json.NewDecoder(strings.NewReader(c.Stderr))
 	if err := dec.Decode(&v); err != nil {
@@ -85,7 +85,7 @@ func (c *CommandInConversation) StderrToJson() interface{} {
 	return v
 }
 
-func (c *CommandInConversation) StderrToYaml() interface{} {
+func (c *CommandInConversation) ParseStderrAsYaml() interface{} {
 	var v interface{}
 	if err := yaml.Unmarshal([]byte(c.Stderr), &v); err != nil {
 		return nil
