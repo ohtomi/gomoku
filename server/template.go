@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"strings"
 	"text/template"
+
+	"gopkg.in/yaml.v2"
 )
 
 func (c *Conversation) GetByKey(values map[string][]string, key string) interface{} {
@@ -49,6 +51,14 @@ func (r *RequestInConversation) BodyToJson() interface{} {
 	return v
 }
 
+func (r *RequestInConversation) BodyToYaml() interface{} {
+	var v interface{}
+	if err := yaml.Unmarshal([]byte(r.Body), &v); err != nil {
+		return nil
+	}
+	return v
+}
+
 func (c *CommandInConversation) StdoutToJson() interface{} {
 	var v interface{}
 	dec := json.NewDecoder(strings.NewReader(c.Stdout))
@@ -58,10 +68,26 @@ func (c *CommandInConversation) StdoutToJson() interface{} {
 	return v
 }
 
+func (c *CommandInConversation) StdoutToYaml() interface{} {
+	var v interface{}
+	if err := yaml.Unmarshal([]byte(c.Stdout), &v); err != nil {
+		return nil
+	}
+	return v
+}
+
 func (c *CommandInConversation) StderrToJson() interface{} {
 	var v interface{}
 	dec := json.NewDecoder(strings.NewReader(c.Stderr))
 	if err := dec.Decode(&v); err != nil {
+		return nil
+	}
+	return v
+}
+
+func (c *CommandInConversation) StderrToYaml() interface{} {
+	var v interface{}
+	if err := yaml.Unmarshal([]byte(c.Stderr), &v); err != nil {
 		return nil
 	}
 	return v

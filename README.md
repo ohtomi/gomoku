@@ -132,7 +132,8 @@ To generate textual outputs, see an API document of the [Go standard template en
 - `.RemoteAddr`: a remote address of an HTTP request (`string`)
 
 - `.Body`: HTTP request body (`string` or `map`)
-  - `.BodyToJson()`: returns `JSON` object made from `.Body` (`map`)
+- `.BodyToJson()`: returns `JSON` object made from `.Body` (`map`)
+- `.BodyToYaml()`: returns `YAML` object made from `.Body` (`map`)
 
 - `.Form`: HTTP request form (`map of string to string array`)
 
@@ -143,10 +144,12 @@ To generate textual outputs, see an API document of the [Go standard template en
 - `.Dir`: working directory (`string`)
 
 - `.Stdout`: standard output stream of executable command (`string`)
-  - `.StdoutToJson()`: returns `JSON` object made from `.Stdout` (`map`)
+- `.StdoutToJson()`: returns `JSON` object made from `.Stdout` (`map`)
+- `.StdoutToYaml()`: returns `YAML` object made from `.Stdout` (`map`)
 
 - `.Stderr`: standard error stream of executable command (`string`)
-  - `.StderrToJson()`: returns `JSON` object made from `.Stderr` (`map`)
+- `.StderrToJson()`: returns `JSON` object made from `.Stderr` (`map`)
+- `.StderrToYaml()`: returns `YAML` object made from `.Stderr` (`map`)
 
 ## Installation
 
