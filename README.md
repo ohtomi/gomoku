@@ -104,12 +104,12 @@ To redirect, set `status` to `301`, `302`, `303`, `307`, `308`.
 #### template (type: `string`)
 `template` is a path to a template file representing an HTTP response body.
 
-If `body` is defined in the same `response` block, the value of `body` will be used as an HTTP response body.
+If `body` is set in the same `response` block, `body` will be used instead of `template`.
 
 #### file (type: `string`)
 `file` is a path to a content file representing an HTTP response body.
 
-If `body` (or `template`) is defined in the same `response` block, the value of `body` (or `template`) will be used as an HTTP response body.
+If `body` (or `template`) is set in the same `response` block, `body` (or `template`) will be used instead of `file`.
 
 ## Template
 
@@ -132,7 +132,7 @@ To generate textual outputs, see an API document of the [Go standard template en
 - `.RemoteAddr`: a remote address of an HTTP request (`string`)
 
 - `.Body`: HTTP request body (`string` or `map`)
-- `.BodyToJson()`: returns `JSON` object made from `.Body` (`map`)
+  - `.BodyToJson()`: returns `JSON` object made from `.Body` (`map`)
 
 - `.Form`: HTTP request form (`map of string to string array`)
 
@@ -143,10 +143,10 @@ To generate textual outputs, see an API document of the [Go standard template en
 - `.Dir`: working directory (`string`)
 
 - `.Stdout`: standard output stream of executable command (`string`)
-- `.StdoutToJson()`: returns `JSON` object made from `.Stdout` (`map`)
+  - `.StdoutToJson()`: returns `JSON` object made from `.Stdout` (`map`)
 
 - `.Stderr`: standard error stream of executable command (`string`)
-- `.StderrToJson()`: returns `JSON` object made from `.Stderr` (`map`)
+  - `.StderrToJson()`: returns `JSON` object made from `.Stderr` (`map`)
 
 ## Installation
 
