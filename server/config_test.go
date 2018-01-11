@@ -50,8 +50,10 @@ func TestConfig_SelectConfigItem__find_by_method__plain(t *testing.T) {
 	method := "method2"
 	route := "/route2"
 	headers := http.Header{}
-	headers.Set("key1", "value1")
+	headers.Set("key1", "value0")
+	headers.Add("key1", "value1")
 	headers.Set("key2", "value2")
+	headers.Add("key2", "value3")
 
 	_, cmd, res, found := config.SelectConfigItem(method, route, headers)
 
@@ -71,8 +73,10 @@ func TestConfig_SelectConfigItem__find_by_method__ignore_case(t *testing.T) {
 	method := "method2"
 	route := "/route2"
 	headers := http.Header{}
-	headers.Set("key1", "value1")
+	headers.Set("key1", "value0")
+	headers.Add("key1", "value1")
 	headers.Set("key2", "value2")
+	headers.Add("key2", "value3")
 
 	_, cmd, res, found := config.SelectConfigItem(method, route, headers)
 
@@ -92,8 +96,10 @@ func TestConfig_SelectConfigItem__find_by_method__regex(t *testing.T) {
 	method := "method2"
 	route := "/route2"
 	headers := http.Header{}
-	headers.Set("key1", "value1")
+	headers.Set("key1", "value0")
+	headers.Add("key1", "value1")
 	headers.Set("key2", "value2")
+	headers.Add("key2", "value3")
 
 	_, cmd, res, found := config.SelectConfigItem(method, route, headers)
 
@@ -113,8 +119,10 @@ func TestConfig_SelectConfigItem__find_by_route__file(t *testing.T) {
 	method := "method2"
 	route := "/route2"
 	headers := http.Header{}
-	headers.Set("key1", "value1")
+	headers.Set("key1", "value0")
+	headers.Add("key1", "value1")
 	headers.Set("key2", "value2")
+	headers.Add("key2", "value3")
 
 	_, cmd, res, found := config.SelectConfigItem(method, route, headers)
 
@@ -134,8 +142,10 @@ func TestConfig_SelectConfigItem__find_by_route__directory(t *testing.T) {
 	method := "method2"
 	route := "/route2"
 	headers := http.Header{}
-	headers.Set("key1", "value1")
+	headers.Set("key1", "value0")
+	headers.Add("key1", "value1")
 	headers.Set("key2", "value2")
+	headers.Add("key2", "value3")
 
 	_, cmd, res, found := config.SelectConfigItem(method, route, headers)
 
@@ -155,8 +165,10 @@ func TestConfig_SelectConfigItem__find_by_headers__a_condition(t *testing.T) {
 	method := "method2"
 	route := "/route2"
 	headers := http.Header{}
-	headers.Set("key1", "value1")
+	headers.Set("key1", "value0")
+	headers.Add("key1", "value1")
 	headers.Set("key2", "value2")
+	headers.Add("key2", "value3")
 
 	_, cmd, res, found := config.SelectConfigItem(method, route, headers)
 
@@ -176,8 +188,10 @@ func TestConfig_SelectConfigItem__find_by_headers__some_conditions(t *testing.T)
 	method := "method2"
 	route := "/route2"
 	headers := http.Header{}
-	headers.Set("key1", "value1")
+	headers.Set("key1", "value0")
+	headers.Add("key1", "value1")
 	headers.Set("key2", "value2")
+	headers.Add("key2", "value3")
 
 	_, cmd, res, found := config.SelectConfigItem(method, route, headers)
 

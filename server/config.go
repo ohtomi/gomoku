@@ -84,12 +84,17 @@ func (c *Config) SelectConfigItem(method, route string, headers http.Header) (*R
 }
 
 func matchHeaders(expected map[string]string, actual http.Header) bool {
-	for k, v := range expected {
-		if !regexp.MustCompile(fmt.Sprintf("^%s", v)).MatchString(actual.Get(k)) {
-			return false
+	for k1, v1 := range expected {
+		if v2array, ok := actual[http.CanonicalHeaderKey(k1)]; ok {
+			for _, v2 := range v2array {
+				if regexp.MustCompile(fmt.Sprintf("^%s", v1)).MatchString(v2) {
+					return true
+				}
+			}
 		}
+		return false
 	}
-	return true
+	return false
 }
 
 func (c *Config) SaveToFile(filename string) error {
