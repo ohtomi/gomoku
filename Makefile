@@ -9,7 +9,7 @@ GOX_ARCH = amd64 386
 
 default: test
 
-build: go-assets-builder
+build: go-generate
 	@cd $(MAIN_PACKAGE) ; \
 	gox \
 	  -ldflags "-X main.GitCommit=$(COMMIT)" \
@@ -17,13 +17,13 @@ build: go-assets-builder
 	  -arch="$(firstword $(GOX_ARCH))" \
 	  -output="$(CURDIR)/pkg/{{.OS}}_{{.Arch}}/{{.Dir}}"
 
-test:
-	go test -v -parallel=4 ${PACKAGES}
+test: go-generate
+	go test ${VERBOSE} -parallel=4 ${PACKAGES}
 
-test-race:
-	go test -v -race ${PACKAGES}
+test-race: go-generate
+	go test ${VERBOSE} -race ${PACKAGES}
 
-vet:
+vet: go-generate
 	go vet ${PACKAGES}
 
 clean:
@@ -33,7 +33,7 @@ clean:
 install: clean build
 	cp "$(CURDIR)/pkg/$(firstword $(GOX_OS))_$(firstword $(GOX_ARCH))/$(REPO)" "${GOPATH}/bin"
 
-package: clean go-assets-builder
+package: clean go-generate
 	@cd $(MAIN_PACKAGE) ; \
 	gox \
 	  -ldflags "-X main.GitCommit=$(COMMIT)" \
@@ -62,7 +62,7 @@ fmt:
 dep:
 	dep ensure
 
-go-assets-builder:
-	@+$(MAKE) -C server
+go-generate:
+	go generate ${VERBOSE} ${PACKAGES}
 
-.PHONY: build test test-race vet clean install package release fmt dep go-assets-builder
+.PHONY: build test test-race vet clean install package release fmt dep go-generate
