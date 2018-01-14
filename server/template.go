@@ -10,12 +10,20 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func (c *Conversation) GetByKey(values map[string][]string, key string) interface{} {
-	return values[key]
+func (c *Conversation) GetByKey(values map[string][]string, key string) []string {
+	if value, ok := values[key]; ok {
+		return value
+	} else {
+		return nil
+	}
 }
 
-func (c *Conversation) GetByIndex(values []string, index int) interface{} {
-	return values[index]
+func (c *Conversation) GetByIndex(values []string, index int) string {
+	if index < len(values) {
+		return values[index]
+	} else {
+		return ""
+	}
 }
 
 func (c *Conversation) JoinWith(values []string, sep string) string {

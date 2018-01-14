@@ -116,7 +116,7 @@ If `body` (or `template`) is set in the same `response` block, `body` (or `templ
 To generate textual outputs, see an API document of the [Go standard template engine](https://golang.org/pkg/text/template/).
 
 ### function
-- `.GetByKey(map of string to string, string)`: returns `string array`
+- `.GetByKey(map of string to string array, string)`: returns `string array`
 - `.GetByIndex(string array, integer)`: returns `string`
 - `.JoinWith(string array, string)`: returns joined `string array`
 
