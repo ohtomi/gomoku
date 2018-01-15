@@ -1,4 +1,17 @@
-## 0.3.0 (2018-12-31)
+## 0.4.0 (2018-01-16)
+
+### Added
+
+- Support binary file as HTTP response
+- Support `cookie` in HTTP reponse
+
+### Changed
+
+- Reload config file when it changed
+- Rename template functions to parse request body or command's output
+- Test whether every HTTP header matches given value in `request` block
+
+## 0.3.0 (2017-12-31)
 
 ### Added
 
