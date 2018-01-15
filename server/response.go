@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"time"
 )
 
 func (r *Response) Write(conversation *Conversation, writer http.ResponseWriter) error {
@@ -49,6 +50,14 @@ func (r *Response) Write(conversation *Conversation, writer http.ResponseWriter)
 	}
 	writer.Header().Set("content-length", fmt.Sprintf("%d", len(content)))
 
+	for _, value := range r.Cookies {
+		cookie, err := buildCookie(&value)
+		if err != nil {
+			return err
+		}
+		http.SetCookie(writer, cookie)
+	}
+
 	if r.Status == 0 {
 		writer.WriteHeader(http.StatusOK)
 	} else {
@@ -69,4 +78,36 @@ func readFile(filename string) ([]byte, error) {
 	}
 	defer fd.Close()
 	return ioutil.ReadAll(fd)
+}
+
+func buildCookie(c *Cookie) (*http.Cookie, error) {
+	cookie := &http.Cookie{}
+
+	cookie.Name = c.Name
+	cookie.Value = c.Value
+
+	if len(c.Path) != 0 {
+		cookie.Path = c.Path
+	}
+	if len(c.Domain) != 0 {
+		cookie.Domain = c.Domain
+	}
+	if len(c.Expires) != 0 {
+		expires, err := time.Parse("2006-01-02 15:04:05 MST", c.Expires)
+		if err != nil {
+			return nil, err
+		}
+		cookie.Expires = expires
+	}
+	if c.MaxAge != 0 {
+		cookie.MaxAge = c.MaxAge
+	}
+	if c.Secure {
+		cookie.Secure = c.Secure
+	}
+	if c.HttpOnly {
+		cookie.HttpOnly = c.HttpOnly
+	}
+
+	return cookie, nil
 }

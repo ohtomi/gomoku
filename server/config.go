@@ -36,9 +36,22 @@ type Request struct {
 type Response struct {
 	Status   int               `yaml:",omitempty"`
 	Headers  map[string]string `yaml:",omitempty"`
+	Cookies  []Cookie          `yaml:",omitempty"`
 	Body     string            `yaml:",omitempty"`
 	Template string            `yaml:",omitempty"`
 	File     string            `yaml:",omitempty"`
+}
+
+type Cookie struct {
+	Name  string
+	Value string
+
+	Path     string `yaml:",omitempty"`
+	Domain   string `yaml:",omitempty"`
+	Expires  string `yaml:",omitempty"`
+	MaxAge   int    `yaml:",omitempty"`
+	Secure   bool   `yaml:",omitempty"`
+	HttpOnly bool   `yaml:",omitempty"`
 }
 
 func NewConfig(filename string) (*Config, error) {

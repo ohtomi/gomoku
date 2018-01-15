@@ -81,7 +81,16 @@ In `response` block, users can use `.Request` object and `.Command` object at th
 - response:
     status: 200
     headers:
-      content-type: application/json; charset=utf-8 
+      content-type: application/json; charset=utf-8
+    cookies:
+    - name: session-id
+      value: 12345
+      path: /
+      domain: localhost
+      expires: 2018-01-14 22:47:17 JST
+      maxage: 0
+      secure: false
+      httponly: false
     body: >
       {
       "greeting": "{{ .Command.ParseStdoutAsJson.greet }}",
@@ -97,6 +106,9 @@ To redirect, set `status` to `301`, `302`, `303`, `307`, `308`.
 
 #### headers (type: `map of string to string`)
 `headers` is an HTTP response headers.
+
+#### cookies (type: `map array`)
+`cookies` is an HTTP response cookies.
 
 #### body (type: `string`)
 `body` is an HTTP response body.
