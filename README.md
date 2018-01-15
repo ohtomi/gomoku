@@ -29,6 +29,8 @@ $ curl -v -H 'x-gomoku:yes' http://localhost:8080/foo
 {"greeting": "hello, gomoku", "method": "GET", "url": "/foo"}
 ```
 
+To see example configurations, please visit [this page](../master/example). 
+
 ## Configuration
 
 ### request block
