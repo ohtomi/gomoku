@@ -82,10 +82,16 @@ func buildUserScriptHandler(config *Config, cors, verbose, errorNoMatch bool) ht
 	}
 }
 
-func StartHttpServer(addr string, config *Config, cors, verbose, errorNoMatch bool) error {
+func StartHttpServer(addr string, config *Config, cors, tls bool, cert, key string, verbose, errorNoMatch bool) error {
 	http.HandleFunc("/", buildUserScriptHandler(config, cors, verbose, errorNoMatch))
-	if err := http.ListenAndServe(addr, nil); err != nil {
-		return errors.Wrap(err, "failed to start http server")
+	if tls {
+		if err := http.ListenAndServeTLS(addr, cert, key, nil); err != nil {
+			return errors.Wrap(err, "failed to start https server")
+		}
+	} else {
+		if err := http.ListenAndServe(addr, nil); err != nil {
+			return errors.Wrap(err, "failed to start http server")
+		}
 	}
 	return nil
 }

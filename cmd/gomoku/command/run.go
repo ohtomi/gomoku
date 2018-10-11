@@ -20,6 +20,9 @@ func (c *RunCommand) Run(args []string) int {
 		port         int
 		filename     string
 		cors         bool
+		tls          bool
+		cert         string
+		key          string
 		verbose      bool
 		errorNoMatch bool
 	)
@@ -34,10 +37,19 @@ func (c *RunCommand) Run(args []string) int {
 	flags.StringVar(&filename, "file", "gomoku.yml", "")
 	flags.StringVar(&filename, "f", "gomoku.yml", "")
 	flags.BoolVar(&cors, "cors", false, "")
+	flags.BoolVar(&tls, "tls", false, "")
+	flags.BoolVar(&tls, "ssl", false, "")
+	flags.StringVar(&cert, "cert", "", "")
+	flags.StringVar(&key, "key", "", "")
 	flags.BoolVar(&verbose, "verbose", false, "")
 	flags.BoolVar(&errorNoMatch, "error-no-match", false, "")
 
 	if err := flags.Parse(args); err != nil {
+		return 1
+	}
+
+	if tls && (len(cert) == 0 || len(key) == 0) {
+		c.Ui.Warn("certificate file and private key must be given if TLS mode enabled")
 		return 1
 	}
 
@@ -68,7 +80,7 @@ func (c *RunCommand) Run(args []string) int {
 		}
 	}()
 
-	if err := server.StartHttpServer(fmt.Sprintf(":%d", port), config, cors, verbose, errorNoMatch); err != nil {
+	if err := server.StartHttpServer(fmt.Sprintf(":%d", port), config, cors, tls, cert, key, verbose, errorNoMatch); err != nil {
 		c.Ui.Error(err.Error())
 		return 1
 	}
@@ -86,6 +98,9 @@ Options:
   --port, -p  Port number listened by gomoku HTTP server. By default, 8080.
   --file, -f  Path to config file. By default, "./gomoku.yml".
   --cors      Enable CORS suppport. By default, false.
+  --tls       Enable TLS mode. By default, false.
+  --cert      Path to certificate file, which must be given if TLS mode enabled.
+  --key       Path to private key, which must be given if TLS mode enabled.
   --verbose   Print verbosely. By default, false.
   --error-no-match
               Respond 500 internal server error. By default, false (= respond 200 OK).
