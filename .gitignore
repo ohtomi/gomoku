@@ -2,5 +2,6 @@ vendor/
 pkg/
 dist/
 testdata/
+cert/
 
 .idea/
