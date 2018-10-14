@@ -71,5 +71,8 @@ certificate:
 	openssl genrsa -out ./cert/server.key 2048
 	openssl req -new -x509 -sha256 \
 	  -key ./cert/server.key -out ./cert/server.crt -days 3650
+	sudo security add-trusted-cert -d \
+	  -r trustRoot -k /Library/Keychains/System.keychain \
+	  ./cert/server.crt
 
 .PHONY: build test test-race vet clean install package release fmt dep go-generate certificate
