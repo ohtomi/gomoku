@@ -66,8 +66,10 @@ go-generate:
 	go generate ${VERBOSE} ${PACKAGES}
 
 certificate:
+	@rm -fr ./cert
 	@mkdir -p ./cert
 	openssl genrsa -out ./cert/server.key 2048
-	openssl req -new -x509 -sha256 -key ./cert/server.key -out ./cert/server.crt -days 3650
+	openssl req -new -x509 -sha256 \
+	  -key ./cert/server.key -out ./cert/server.crt -days 3650
 
 .PHONY: build test test-race vet clean install package release fmt dep go-generate certificate
