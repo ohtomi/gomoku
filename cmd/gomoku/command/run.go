@@ -80,7 +80,8 @@ func (c *RunCommand) Run(args []string) int {
 		}
 	}()
 
-	if err := server.StartHttpServer(fmt.Sprintf(":%d", port), config, cors, tls, cert, key, verbose, errorNoMatch); err != nil {
+	reporter := server.NewReporter(c.Ui, verbose)
+	if err := server.StartHttpServer(fmt.Sprintf(":%d", port), config, cors, tls, cert, key, errorNoMatch, reporter); err != nil {
 		c.Ui.Error(err.Error())
 		return 1
 	}
