@@ -23,7 +23,6 @@ func (c *RunCommand) Run(args []string) int {
 		tls          bool
 		cert         string
 		key          string
-		verbose      bool
 		errorNoMatch bool
 	)
 
@@ -41,7 +40,6 @@ func (c *RunCommand) Run(args []string) int {
 	flags.BoolVar(&tls, "ssl", false, "")
 	flags.StringVar(&cert, "cert", "", "")
 	flags.StringVar(&key, "key", "", "")
-	flags.BoolVar(&verbose, "verbose", false, "")
 	flags.BoolVar(&errorNoMatch, "error-no-match", false, "")
 
 	if err := flags.Parse(args); err != nil {
@@ -80,7 +78,7 @@ func (c *RunCommand) Run(args []string) int {
 		}
 	}()
 
-	reporter := server.NewReporter(c.Ui, verbose)
+	reporter := server.NewReporter(c.Ui)
 	if err := server.StartHttpServer(fmt.Sprintf(":%d", port), config, cors, tls, cert, key, errorNoMatch, reporter); err != nil {
 		c.Ui.Error(err.Error())
 		return 1
@@ -95,6 +93,7 @@ func (c *RunCommand) Synopsis() string {
 
 func (c *RunCommand) Help() string {
 	helpText := `usage: gomoku run [OPTIONS...]
+
 Options:
   --port, -p  Port number listened by gomoku HTTP server. By default, 8080.
   --file, -f  Path to config file. By default, "./gomoku.yml".
@@ -102,7 +101,6 @@ Options:
   --tls       Enable TLS mode. By default, false.
   --cert      Path to certificate file, which must be given if TLS mode enabled.
   --key       Path to private key, which must be given if TLS mode enabled.
-  --verbose   Print verbosely. By default, false.
   --error-no-match
               Respond 500 internal server error. By default, false (= respond 200 OK).
 `

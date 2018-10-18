@@ -2,6 +2,8 @@ package server
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/mitchellh/cli"
 )
 
@@ -38,8 +40,9 @@ func (r CliReporter) Warnf(format string, a ...interface{})  { r.Ui.Warn(fmt.Spr
 func (r CliReporter) Error(s string)                         { r.Ui.Error(s) }
 func (r CliReporter) Errorf(format string, a ...interface{}) { r.Ui.Error(fmt.Sprintf(format, a...)) }
 
-func NewReporter(ui cli.Ui, enabled bool) Reporter {
-	if enabled {
+func NewReporter(ui cli.Ui) Reporter {
+	debug := os.Getenv("DEBUG")
+	if len(debug) != 0 {
 		return CliReporter{ui}
 	} else {
 		return NoopReporter{}
