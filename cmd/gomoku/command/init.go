@@ -26,13 +26,12 @@ func (c *InitCommand) Run(args []string) int {
 		return 1
 	}
 
-	positionals := flags.Args()
-	if len(positionals) < 1 {
+	if len(flags.Args()) < 1 {
 		c.Ui.Error("DIR not specified")
 		return 1
 	}
 
-	dirname = positionals[0]
+	dirname = flags.Args()[0]
 	if err := server.CreateScaffold(dirname); err != nil {
 		c.Ui.Error(err.Error())
 		return 1
