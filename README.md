@@ -168,7 +168,7 @@ To generate textual outputs, see an API document of the [Go standard template en
 ## Installation
 
 ```console
-$ go get github.com/ohtomi/gomoku/cmd/gomoku
+$ go get -u github.com/ohtomi/gomoku/cmd/gomoku
 ```
 
 Or clone the [repository](https://github.com/ohtomi/gomoku) and run:
