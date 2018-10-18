@@ -10,21 +10,26 @@ import (
 
 func Run(args []string) int {
 
+	basicUi := &cli.BasicUi{
+		Writer:      os.Stdout,
+		ErrorWriter: os.Stderr,
+		Reader:      os.Stdin,
+	}
+	colorUi := &cli.ColoredUi{
+		OutputColor: cli.UiColorNone,
+		InfoColor:   cli.UiColorBlue,
+		ErrorColor:  cli.UiColorRed,
+		Ui:          basicUi,
+	}
+
 	// Meta-option for executables.
 	// It defines output color and its stdout/stderr stream.
-	meta := &command.Meta{
-		Ui: &cli.ColoredUi{
-			OutputColor: cli.UiColorNone,
-			InfoColor:   cli.UiColorBlue,
-			ErrorColor:  cli.UiColorRed,
-			Ui: &cli.BasicUi{
-				Writer:      os.Stdout,
-				ErrorWriter: os.Stderr,
-				Reader:      os.Stdin,
-			},
-		}}
-
-	return RunCustom(args, Commands(meta))
+	noColor := os.Getenv("NO_COLOR")
+	if len(noColor) != 0 {
+		return RunCustom(args, Commands(&command.Meta{basicUi}))
+	} else {
+		return RunCustom(args, Commands(&command.Meta{colorUi}))
+	}
 }
 
 func RunCustom(args []string, commands map[string]cli.CommandFactory) int {
