@@ -1,3 +1,14 @@
+## 0.6.0 (2018-10-21)
+
+### Added
+
+- Support `NO_COLOR` environment variable
+
+### Changed
+
+- Print details of HTTP request when verbose mode
+- Remove `--verbose` flag, use `DEBUG` environment variable instead
+
 ## 0.5.0 (2018-10-12)
 
 ### Added
