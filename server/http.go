@@ -43,8 +43,13 @@ func buildUserScriptHandler(config *Config, cors, errorNoMatch bool, reporter Re
 		}
 
 		if cors {
+			origin := r.Header.Get("Origin")
+			if len(origin) != 0 {
+				w.Header().Set("Access-Control-Allow-Origin", origin)
+			} else {
+				w.Header().Set("Access-Control-Allow-Origin", "*")
+			}
 			if r.Method == "OPTIONS" {
-				w.Header().Set("Access-Control-Allow-Origin", r.RemoteAddr)
 				w.Header().Set("Access-Control-Allow-Headers", r.Header.Get("Access-Control-Request-Headers"))
 				w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 				w.WriteHeader(http.StatusOK)
