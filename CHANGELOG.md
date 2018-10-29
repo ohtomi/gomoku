@@ -1,3 +1,9 @@
+## 0.6.1 (2018-10-30)
+
+### Fixed
+
+- Fix `access-control-allow-origin` header bug
+
 ## 0.6.0 (2018-10-21)
 
 ### Added
