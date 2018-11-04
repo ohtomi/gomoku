@@ -1,3 +1,9 @@
+## 0.6.2 (2018-11-04)
+
+### Fixed
+
+- HTTP headers matcher returns true if all given regular expressions match 
+
 ## 0.6.1 (2018-10-30)
 
 ### Fixed

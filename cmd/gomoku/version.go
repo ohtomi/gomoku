@@ -1,7 +1,7 @@
 package main
 
 const Name string = "gomoku"
-const Version string = "0.6.1"
+const Version string = "0.6.2"
 
 // GitCommit describes latest commit hash.
 // This value is extracted by git command when building.
