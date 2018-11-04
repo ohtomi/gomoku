@@ -99,13 +99,22 @@ func (c *Config) SelectConfigItem(method, route string, headers http.Header) (*R
 func matchHeaders(expected map[string]string, actual http.Header) bool {
 	for k1, v1 := range expected {
 		if v2array, ok := actual[http.CanonicalHeaderKey(k1)]; ok {
-			for _, v2 := range v2array {
-				if regexp.MustCompile(fmt.Sprintf("^%s", v1)).MatchString(v2) {
-					return true
-				}
+			if !containsValue(v1, v2array) {
+				return false
 			}
+		} else {
+			return false
 		}
-		return false
+	}
+	return true
+}
+
+func containsValue(exptected string, actual []string) bool {
+	matcher := regexp.MustCompile(fmt.Sprintf("^%s", exptected))
+	for _, v := range actual {
+		if matcher.MatchString(v) {
+			return true
+		}
 	}
 	return false
 }
