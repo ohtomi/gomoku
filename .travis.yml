@@ -2,14 +2,9 @@ language: go
 go:
   - 1.10.x
   - 1.11.x
-  - tip
 before_install:
-  - go get github.com/golang/dep/...
-  - go get github.com/jessevdk/go-assets-builder
-install:
-  - $GOPATH/bin/dep ensure
+  - go get -t -v github.com/jessevdk/go-assets-builder
 script:
-  - make go-generate
-  - go test -race -coverprofile=coverage.txt -covermode=atomic github.com/ohtomi/gomoku/server
+  - make test-cover
 after_success:
   - bash <(curl -s https://codecov.io/bash)
