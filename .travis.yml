@@ -1,13 +1,13 @@
 language: go
 go:
-  - 1.10
-  - 1.11
+  - 1.10.x
+  - 1.11.x
   - tip
 before_install:
   - go get github.com/golang/dep/...
 install:
   - $GOPATH/bin/dep ensure
 script:
-  - go test -race -coverprofile=coverage.txt -covermode=atomic github.com/ohtomi/gomoku
+  - go test -race -coverprofile=coverage.txt -covermode=atomic github.com/ohtomi/gomoku/server
 after_success:
   - bash <(curl -s https://codecov.io/bash)
