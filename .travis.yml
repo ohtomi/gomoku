@@ -5,6 +5,7 @@ go:
   - tip
 before_install:
   - go get github.com/golang/dep/...
+  - go get github.com/jessevdk/go-assets-builder
 install:
   - $GOPATH/bin/dep ensure
 script:
