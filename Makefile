@@ -23,14 +23,14 @@ test: go-generate
 test-race: go-generate
 	go test ${VERBOSE} -race ${PACKAGES}
 
-test-cover: go-generate
+test-coverage: go-generate
 	@echo "" > coverage.txt
 	@for d in ${PACKAGES} ; do \
 	  go test ${VERBOSE} -race -coverprofile=profile.out -covermode=atomic $$d ; \
 	done
 	@if [ -f profile.out ]; then \
-	  cat profile.out >> coverage.txt
-	  rm profile.out
+	  cat profile.out >> coverage.txt \
+	  rm profile.out \
 	fi
 
 vet: go-generate
