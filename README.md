@@ -1,5 +1,10 @@
 # gomoku
 
+[![GoDoc](https://img.shields.io/badge/go-documentation-blue.svg)](http://godoc.org/github.com/ohtomi/gomoku)
+[![License](https://img.shields.io/badge/license-mit-blue.svg)](LICENSE)
+[![Build Status](https://travis-ci.org/ohtomi/gomoku.svg?branch=master)](https://travis-ci.org/ohtomi/gomoku)
+[![codecov](https://codecov.io/gh/ohtomi/gomoku/branch/master/graph/badge.svg)](https://codecov.io/gh/ohtomi/gomoku)
+
 ## Description
 
 `gomoku` can help you make a HTTP server written in your favorite languages.
