@@ -3,7 +3,10 @@ go:
   - 1.10.x
   - 1.11.x
 before_install:
+  - go get github.com/golang/dep/...
   - go get -t -v github.com/jessevdk/go-assets-builder
+install:
+  - dep ensure
 script:
   - make test-cover
 after_success:
