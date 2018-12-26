@@ -29,8 +29,8 @@ test-coverage: go-generate
 	  go test ${VERBOSE} -race -coverprofile=profile.out -covermode=atomic $$d ; \
 	done
 	@if [ -f profile.out ]; then \
-	  cat profile.out >> coverage.txt \
-	  rm profile.out \
+	  cat profile.out >> coverage.txt ; \
+	  rm profile.out ; \
 	fi
 
 vet: go-generate

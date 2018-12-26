@@ -5,3 +5,6 @@ testdata/
 cert/
 
 .idea/
+
+coverage.txt
+profile.out
