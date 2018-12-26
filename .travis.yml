@@ -8,6 +8,7 @@ before_install:
 install:
   - $GOPATH/bin/dep ensure
 script:
+  - go generate github.com/ohtomi/gomoku/server
   - go test -race -coverprofile=coverage.txt -covermode=atomic github.com/ohtomi/gomoku/server
 after_success:
   - bash <(curl -s https://codecov.io/bash)
