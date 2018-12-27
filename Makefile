@@ -18,12 +18,6 @@ build: go-generate
 	  -output="$(CURDIR)/pkg/{{.OS}}_{{.Arch}}/{{.Dir}}"
 
 test: go-generate
-	go test ${VERBOSE} -parallel=4 ${PACKAGES}
-
-test-race: go-generate
-	go test ${VERBOSE} -race ${PACKAGES}
-
-test-coverage: go-generate
 	@echo "" > coverage.txt
 	@for d in ${PACKAGES} ; do \
 	  go test ${VERBOSE} -race -coverprofile=profile.out -covermode=atomic $$d ; \
@@ -32,6 +26,12 @@ test-coverage: go-generate
 	  cat profile.out >> coverage.txt ; \
 	  rm profile.out ; \
 	fi
+
+test-cpu: go-generate
+	go test ${VERBOSE} -cpu 1,2,4 ${PACKAGES}
+
+test-race: go-generate
+	go test ${VERBOSE} -race ${PACKAGES}
 
 vet: go-generate
 	go vet ${PACKAGES}
@@ -85,4 +85,4 @@ certificate:
 	  -r trustRoot -k /Library/Keychains/System.keychain \
 	  ./cert/server.crt
 
-.PHONY: build test test-race vet clean install package release fmt dep go-generate certificate
+.PHONY: build test test-cpu test-race vet clean install package release fmt dep go-generate certificate
