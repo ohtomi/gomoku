@@ -26,9 +26,9 @@ func Run(args []string) int {
 	// It defines output color and its stdout/stderr stream.
 	noColor := os.Getenv("NO_COLOR")
 	if len(noColor) != 0 {
-		return RunCustom(args, Commands(&command.Meta{basicUi}))
+		return RunCustom(args, Commands(&command.Meta{Ui: basicUi}))
 	} else {
-		return RunCustom(args, Commands(&command.Meta{colorUi}))
+		return RunCustom(args, Commands(&command.Meta{Ui: colorUi}))
 	}
 }
 
