@@ -43,6 +43,9 @@ clean:
 install: clean build
 	cp "$(CURDIR)/pkg/$(firstword $(GOX_OS))_$(firstword $(GOX_ARCH))/$(REPO)" "${GOPATH}/bin"
 
+version:
+	gobump ${scope} -w $(MAIN_PACKAGE)
+
 package: clean go-generate
 	@cd $(MAIN_PACKAGE) ; \
 	gox \
