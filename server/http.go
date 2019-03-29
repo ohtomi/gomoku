@@ -97,8 +97,12 @@ func buildUserScriptHandler(config *Config, cors, errorNoMatch bool, reporter Re
 	}
 }
 
-func StartHttpServer(addr string, config *Config, cors, tls bool, cert, key string, errorNoMatch bool, reporter Reporter) error {
-	http.HandleFunc("/", buildUserScriptHandler(config, cors, errorNoMatch, reporter))
+func StartHttpServer(addr string, config *Config, cors, tls bool, cert, key string, ws, errorNoMatch bool, reporter Reporter) error {
+	if (ws) {
+		// TODO implementation websocket handler
+	} else {
+		http.HandleFunc("/", buildUserScriptHandler(config, cors, errorNoMatch, reporter))
+	}
 	if tls {
 		if err := http.ListenAndServeTLS(addr, cert, key, nil); err != nil {
 			return errors.Wrap(err, "failed to start https server")
