@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
-- todo
+
+- Add `websocket` support
 
 <!--
 - from dep to vgo
