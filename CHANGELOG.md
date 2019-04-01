@@ -12,29 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - from dep to vgo
 - `HTTP streaming` support
 - `gRPC` support
-- `websocket` support
 - `Consumer Driven Contract` support
   - mock server
   - mock client
- -->
-
-<!--
-## Guiding Principles
-- Changelogs are for humans, not machines.
-- There should be an entry for every single version.
-- The same types of changes should be grouped.
-- Versions and sections should be linkable.
-- The latest version comes first.
-- The release date of each version is displayed.
-- Mention whether you follow [Semantic Versioning](https://semver.org/).
-
-## Types of changes
-- Added for new features.
-- Changed for changes in existing functionality.
-- Deprecated for soon-to-be removed features.
-- Removed for now removed features.
-- Fixed for any bug fixes.
-- Security in case of vulnerabilities.
  -->
 
 ## 0.6.2 (2018-11-04)
@@ -71,7 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Support binary file as HTTP response
-- Support `cookie` in HTTP reponse
+- Support `cookie` in HTTP response
 
 ### Changed
 
