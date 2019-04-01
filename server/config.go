@@ -22,12 +22,6 @@ type ConfigItem struct {
 	Response Response `yaml:",omitempty"`
 }
 
-type Command struct {
-	Env  []string `yaml:",omitempty"`
-	Path string   `yaml:",omitempty"`
-	Args []string `yaml:",omitempty"`
-}
-
 type Request struct {
 	Method  string            `yaml:",omitempty"`
 	Route   string            `yaml:",omitempty"`
@@ -36,6 +30,12 @@ type Request struct {
 
 type Upgrade struct {
 	Scenario string `yaml:",omitempty"`
+}
+
+type Command struct {
+	Env  []string `yaml:",omitempty"`
+	Path string   `yaml:",omitempty"`
+	Args []string `yaml:",omitempty"`
 }
 
 type Response struct {
