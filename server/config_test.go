@@ -8,31 +8,31 @@ import (
 
 func TestConfig_SelectConfigItem__no_item(t *testing.T) {
 	config := &Config{
-		ConfigItem{Request{Method: "method1", Route: "/route1", Headers: map[string]string{"key1": "value1"}}, Command{}, Response{}},
+		ConfigItem{Request{Method: "method1", Route: "/route1", Headers: map[string]string{"key1": "value1"}}, Upgrade{}, Command{}, Response{}},
 	}
 
 	method := "method1"
 	route := "/route1"
 	headers := http.Header{}
 
-	req, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	req, upd, cmd, res, found := config.SelectConfigItem(method, route, headers)
 
 	if found {
-		t.Fatalf("found wrong config item. req: %+v, cmd: %+v, res: %+v", req, cmd, res)
+		t.Fatalf("found wrong config item. req: %+v, upd: %+v, cmd: %+v, res: %+v", req, upd, cmd, res)
 	}
 }
 
 func TestConfig_SelectConfigItem__last_item(t *testing.T) {
 	config := &Config{
-		ConfigItem{Request{Method: "method2"}, Command{Path: "path2"}, Response{Status: 2}},
-		ConfigItem{Request{}, Command{Path: "path1"}, Response{Status: 1}},
+		ConfigItem{Request{Method: "method2"}, Upgrade{}, Command{Path: "path2"}, Response{Status: 2}},
+		ConfigItem{Request{}, Upgrade{}, Command{Path: "path1"}, Response{Status: 1}},
 	}
 
 	method := "method1"
 	route := "/route1"
 	headers := http.Header{}
 
-	_, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	_, _, cmd, res, found := config.SelectConfigItem(method, route, headers)
 
 	if !found {
 		t.Fatal("not found config item")
@@ -43,8 +43,8 @@ func TestConfig_SelectConfigItem__last_item(t *testing.T) {
 
 func TestConfig_SelectConfigItem__find_by_method__plain(t *testing.T) {
 	config := &Config{
-		ConfigItem{Request{Method: "method2"}, Command{Path: "path2"}, Response{Status: 2}},
-		ConfigItem{Request{}, Command{Path: "path1"}, Response{Status: 1}},
+		ConfigItem{Request{Method: "method2"}, Upgrade{}, Command{Path: "path2"}, Response{Status: 2}},
+		ConfigItem{Request{}, Upgrade{}, Command{Path: "path1"}, Response{Status: 1}},
 	}
 
 	method := "method2"
@@ -55,7 +55,7 @@ func TestConfig_SelectConfigItem__find_by_method__plain(t *testing.T) {
 	headers.Set("key2", "value2")
 	headers.Add("key2", "value3")
 
-	_, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	_, _, cmd, res, found := config.SelectConfigItem(method, route, headers)
 
 	if !found {
 		t.Fatal("not found config item")
@@ -66,8 +66,8 @@ func TestConfig_SelectConfigItem__find_by_method__plain(t *testing.T) {
 
 func TestConfig_SelectConfigItem__find_by_method__ignore_case(t *testing.T) {
 	config := &Config{
-		ConfigItem{Request{Method: "METHOD2"}, Command{Path: "path2"}, Response{Status: 2}},
-		ConfigItem{Request{}, Command{Path: "path1"}, Response{Status: 1}},
+		ConfigItem{Request{Method: "METHOD2"}, Upgrade{}, Command{Path: "path2"}, Response{Status: 2}},
+		ConfigItem{Request{}, Upgrade{}, Command{Path: "path1"}, Response{Status: 1}},
 	}
 
 	method := "method2"
@@ -78,7 +78,7 @@ func TestConfig_SelectConfigItem__find_by_method__ignore_case(t *testing.T) {
 	headers.Set("key2", "value2")
 	headers.Add("key2", "value3")
 
-	_, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	_, _, cmd, res, found := config.SelectConfigItem(method, route, headers)
 
 	if !found {
 		t.Fatal("not found config item")
@@ -89,8 +89,8 @@ func TestConfig_SelectConfigItem__find_by_method__ignore_case(t *testing.T) {
 
 func TestConfig_SelectConfigItem__find_by_method__regex(t *testing.T) {
 	config := &Config{
-		ConfigItem{Request{Method: "method2x|method2"}, Command{Path: "path2"}, Response{Status: 2}},
-		ConfigItem{Request{}, Command{Path: "path1"}, Response{Status: 1}},
+		ConfigItem{Request{Method: "method2x|method2"}, Upgrade{}, Command{Path: "path2"}, Response{Status: 2}},
+		ConfigItem{Request{}, Upgrade{}, Command{Path: "path1"}, Response{Status: 1}},
 	}
 
 	method := "method2"
@@ -101,7 +101,7 @@ func TestConfig_SelectConfigItem__find_by_method__regex(t *testing.T) {
 	headers.Set("key2", "value2")
 	headers.Add("key2", "value3")
 
-	_, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	_, _, cmd, res, found := config.SelectConfigItem(method, route, headers)
 
 	if !found {
 		t.Fatal("not found config item")
@@ -112,8 +112,8 @@ func TestConfig_SelectConfigItem__find_by_method__regex(t *testing.T) {
 
 func TestConfig_SelectConfigItem__find_by_route__file(t *testing.T) {
 	config := &Config{
-		ConfigItem{Request{Route: "/route2"}, Command{Path: "path2"}, Response{Status: 2}},
-		ConfigItem{Request{}, Command{Path: "path1"}, Response{Status: 1}},
+		ConfigItem{Request{Route: "/route2"}, Upgrade{}, Command{Path: "path2"}, Response{Status: 2}},
+		ConfigItem{Request{}, Upgrade{}, Command{Path: "path1"}, Response{Status: 1}},
 	}
 
 	method := "method2"
@@ -124,7 +124,7 @@ func TestConfig_SelectConfigItem__find_by_route__file(t *testing.T) {
 	headers.Set("key2", "value2")
 	headers.Add("key2", "value3")
 
-	_, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	_, _, cmd, res, found := config.SelectConfigItem(method, route, headers)
 
 	if !found {
 		t.Fatal("not found config item")
@@ -135,8 +135,8 @@ func TestConfig_SelectConfigItem__find_by_route__file(t *testing.T) {
 
 func TestConfig_SelectConfigItem__find_by_route__directory(t *testing.T) {
 	config := &Config{
-		ConfigItem{Request{Route: "/route2/"}, Command{Path: "path2"}, Response{Status: 2}},
-		ConfigItem{Request{}, Command{Path: "path1"}, Response{Status: 1}},
+		ConfigItem{Request{Route: "/route2/"}, Upgrade{}, Command{Path: "path2"}, Response{Status: 2}},
+		ConfigItem{Request{}, Upgrade{}, Command{Path: "path1"}, Response{Status: 1}},
 	}
 
 	method := "method2"
@@ -147,7 +147,7 @@ func TestConfig_SelectConfigItem__find_by_route__directory(t *testing.T) {
 	headers.Set("key2", "value2")
 	headers.Add("key2", "value3")
 
-	_, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	_, _, cmd, res, found := config.SelectConfigItem(method, route, headers)
 
 	if !found {
 		t.Fatal("not found config item")
@@ -158,8 +158,8 @@ func TestConfig_SelectConfigItem__find_by_route__directory(t *testing.T) {
 
 func TestConfig_SelectConfigItem__find_by_headers__a_condition(t *testing.T) {
 	config := &Config{
-		ConfigItem{Request{Headers: map[string]string{"key1": "value1"}}, Command{Path: "path2"}, Response{Status: 2}},
-		ConfigItem{Request{}, Command{Path: "path1"}, Response{Status: 1}},
+		ConfigItem{Request{Headers: map[string]string{"key1": "value1"}}, Upgrade{}, Command{Path: "path2"}, Response{Status: 2}},
+		ConfigItem{Request{}, Upgrade{}, Command{Path: "path1"}, Response{Status: 1}},
 	}
 
 	method := "method2"
@@ -170,7 +170,7 @@ func TestConfig_SelectConfigItem__find_by_headers__a_condition(t *testing.T) {
 	headers.Set("key2", "value2")
 	headers.Add("key2", "value3")
 
-	_, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	_, _, cmd, res, found := config.SelectConfigItem(method, route, headers)
 
 	if !found {
 		t.Fatal("not found config item")
@@ -181,8 +181,8 @@ func TestConfig_SelectConfigItem__find_by_headers__a_condition(t *testing.T) {
 
 func TestConfig_SelectConfigItem__find_by_headers__some_conditions(t *testing.T) {
 	config := &Config{
-		ConfigItem{Request{Headers: map[string]string{"key1": "value1", "key2": "value2"}}, Command{Path: "path2"}, Response{Status: 2}},
-		ConfigItem{Request{}, Command{Path: "path1"}, Response{Status: 1}},
+		ConfigItem{Request{Headers: map[string]string{"key1": "value1", "key2": "value2"}}, Upgrade{}, Command{Path: "path2"}, Response{Status: 2}},
+		ConfigItem{Request{}, Upgrade{}, Command{Path: "path1"}, Response{Status: 1}},
 	}
 
 	method := "method2"
@@ -193,7 +193,7 @@ func TestConfig_SelectConfigItem__find_by_headers__some_conditions(t *testing.T)
 	headers.Set("key2", "value2")
 	headers.Add("key2", "value3")
 
-	_, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	_, _, cmd, res, found := config.SelectConfigItem(method, route, headers)
 
 	if !found {
 		t.Fatal("not found config item")

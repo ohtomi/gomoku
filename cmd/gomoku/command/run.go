@@ -23,7 +23,6 @@ func (c *RunCommand) Run(args []string) int {
 		tls          bool
 		cert         string
 		key          string
-		ws           bool
 		errorNoMatch bool
 	)
 
@@ -41,7 +40,6 @@ func (c *RunCommand) Run(args []string) int {
 	flags.BoolVar(&tls, "ssl", false, "")
 	flags.StringVar(&cert, "cert", "", "")
 	flags.StringVar(&key, "key", "", "")
-	flags.BoolVar(&ws, "websocket", false, "")
 	flags.BoolVar(&errorNoMatch, "error-no-match", false, "")
 
 	if err := flags.Parse(args); err != nil {
@@ -81,7 +79,7 @@ func (c *RunCommand) Run(args []string) int {
 	}()
 
 	reporter := server.NewReporter(c.Ui)
-	if err := server.StartHttpServer(fmt.Sprintf(":%d", port), config, cors, tls, cert, key, ws, errorNoMatch, reporter); err != nil {
+	if err := server.StartHttpServer(fmt.Sprintf(":%d", port), config, cors, tls, cert, key, errorNoMatch, reporter); err != nil {
 		c.Ui.Error(err.Error())
 		return 1
 	}
@@ -103,7 +101,6 @@ Options:
   --tls       Enable TLS mode. By default, false.
   --cert      Path to certificate file, which must be given if TLS mode enabled.
   --key       Path to private key, which must be given if TLS mode enabled.
-  --websocket Enable WebSocket support. By default, false.
   --error-no-match
               Respond 500 internal server error. By default, false (= respond 200 OK).
 `

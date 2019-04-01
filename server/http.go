@@ -58,7 +58,7 @@ func buildUserScriptHandler(config *Config, cors, errorNoMatch bool, reporter Re
 			}
 		}
 
-		cRequest, cCommand, cResponse, found := config.SelectConfigItem(r.Method, r.URL.Path, r.Header)
+		cRequest, cUpgrade, cCommand, cResponse, found := config.SelectConfigItem(r.Method, r.URL.Path, r.Header)
 
 		if !found {
 			if errorNoMatch {
@@ -83,6 +83,11 @@ func buildUserScriptHandler(config *Config, cors, errorNoMatch bool, reporter Re
 			reporter.Infof("      form => %s", conversation.Request.Form)
 		}
 
+		if err := cUpgrade.Accept(w, r); err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			reporter.Error(err.Error())
+			return
+		}
 		if err := cCommand.Execute(conversation); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			reporter.Error(err.Error())
@@ -97,12 +102,8 @@ func buildUserScriptHandler(config *Config, cors, errorNoMatch bool, reporter Re
 	}
 }
 
-func StartHttpServer(addr string, config *Config, cors, tls bool, cert, key string, ws, errorNoMatch bool, reporter Reporter) error {
-	if (ws) {
-		// TODO implementation websocket handler
-	} else {
-		http.HandleFunc("/", buildUserScriptHandler(config, cors, errorNoMatch, reporter))
-	}
+func StartHttpServer(addr string, config *Config, cors, tls bool, cert, key string, errorNoMatch bool, reporter Reporter) error {
+	http.HandleFunc("/", buildUserScriptHandler(config, cors, errorNoMatch, reporter))
 	if tls {
 		if err := http.ListenAndServeTLS(addr, cert, key, nil); err != nil {
 			return errors.Wrap(err, "failed to start https server")

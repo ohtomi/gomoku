@@ -17,6 +17,7 @@ type Config []ConfigItem
 
 type ConfigItem struct {
 	Request  Request  `yaml:",omitempty"`
+	Upgrade  Upgrade  `yaml:",omitempty"`
 	Command  Command  `yaml:",omitempty"`
 	Response Response `yaml:",omitempty"`
 }
@@ -31,6 +32,10 @@ type Request struct {
 	Method  string            `yaml:",omitempty"`
 	Route   string            `yaml:",omitempty"`
 	Headers map[string]string `yaml:",omitempty"`
+}
+
+type Upgrade struct {
+	Scenario string `yaml:",omitempty"`
 }
 
 type Response struct {
@@ -71,7 +76,7 @@ func NewConfig(filename string) (*Config, error) {
 	return &config, nil
 }
 
-func (c *Config) SelectConfigItem(method, route string, headers http.Header) (*Request, *Command, *Response, bool) {
+func (c *Config) SelectConfigItem(method, route string, headers http.Header) (*Request, *Upgrade, *Command, *Response, bool) {
 	for _, element := range *c {
 		if len(element.Request.Method) != 0 {
 			if !regexp.MustCompile(fmt.Sprintf("(?i)%s", element.Request.Method)).MatchString(method) {
@@ -91,9 +96,9 @@ func (c *Config) SelectConfigItem(method, route string, headers http.Header) (*R
 				continue
 			}
 		}
-		return &element.Request, &element.Command, &element.Response, true
+		return &element.Request, &element.Upgrade, &element.Command, &element.Response, true
 	}
-	return nil, nil, nil, false
+	return nil, nil, nil, nil, false
 }
 
 func matchHeaders(expected map[string]string, actual http.Header) bool {
