@@ -102,9 +102,9 @@ func (c *Config) SelectConfigItem(method, route string, headers http.Header) (*U
 	return nil, nil, nil, nil, false
 }
 
-func matchHeaders(expected map[string]string, actual http.Header) bool {
-	for k1, v1 := range expected {
-		if v2array, ok := actual[http.CanonicalHeaderKey(k1)]; ok {
+func matchHeaders(want map[string]string, got http.Header) bool {
+	for k1, v1 := range want {
+		if v2array, ok := got[http.CanonicalHeaderKey(k1)]; ok {
 			if !containsValue(v1, v2array) {
 				return false
 			}
@@ -115,9 +115,9 @@ func matchHeaders(expected map[string]string, actual http.Header) bool {
 	return true
 }
 
-func containsValue(exptected string, actual []string) bool {
-	matcher := regexp.MustCompile(fmt.Sprintf("^%s", exptected))
-	for _, v := range actual {
+func containsValue(want string, got []string) bool {
+	matcher := regexp.MustCompile(fmt.Sprintf("^%s", want))
+	for _, v := range got {
 		if matcher.MatchString(v) {
 			return true
 		}
