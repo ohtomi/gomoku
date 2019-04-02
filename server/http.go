@@ -58,7 +58,7 @@ func buildUserScriptHandler(config *Config, cors, errorNoMatch bool, reporter Re
 			}
 		}
 
-		cRequest, cUpgrade, cCommand, cResponse, found := config.SelectConfigItem(r.Method, r.URL.Path, r.Header)
+		cUpgrade, cRequest, cCommand, cResponse, found := config.SelectConfigItem(r.Method, r.URL.Path, r.Header)
 
 		if !found {
 			if errorNoMatch {
