@@ -7,44 +7,76 @@ import (
 )
 
 func TestConfig_SelectConfigItem__no_item(t *testing.T) {
-	config := &Config{
-		ConfigItem{&Upgrade{}, &Request{Method: "method1", Route: "/route1", Headers: map[string]string{"key1": "value1"}}, &Command{}, &Response{}},
+	tests := []struct {
+		name   string
+		config *Config
+	}{
+		{
+			"",
+			&Config{
+				ConfigItem{&Upgrade{}, &Request{Method: "method1", Route: "/route1", Headers: map[string]string{"key1": "value1"}}, &Command{}, &Response{}},
+			},
+		},
 	}
 
 	method := "method1"
 	route := "/route1"
 	headers := http.Header{}
 
-	upd, req, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			upd, req, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
 
-	if found {
-		t.Fatalf("found wrong config item. upd: %+v, req: %+v, cmd: %+v, res: %+v", upd, req, cmd, res)
+			if found {
+				t.Fatalf("found wrong config item. upd: %+v, req: %+v, cmd: %+v, res: %+v", upd, req, cmd, res)
+			}
+		})
 	}
 }
 
 func TestConfig_SelectConfigItem__last_item(t *testing.T) {
-	config := &Config{
-		ConfigItem{&Upgrade{}, &Request{Method: "method2"}, &Command{Path: "path2"}, &Response{Status: 2}},
-		ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+	tests := []struct {
+		name   string
+		config *Config
+	}{
+		{
+			"",
+			&Config{
+				ConfigItem{&Upgrade{}, &Request{Method: "method2"}, &Command{Path: "path2"}, &Response{Status: 2}},
+				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+			},
+		},
 	}
 
 	method := "method1"
 	route := "/route1"
 	headers := http.Header{}
 
-	_, _, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, _, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
 
-	if !found {
-		t.Fatal("not found config item")
+			if !found {
+				t.Fatal("not found config item")
+			}
+			assertCommand(cmd, &Command{Path: "path1"}, t)
+			assertResponse(res, &Response{Status: 1}, t)
+		})
 	}
-	assertCommand(cmd, &Command{Path: "path1"}, t)
-	assertResponse(res, &Response{Status: 1}, t)
 }
 
 func TestConfig_SelectConfigItem__find_by_method__plain(t *testing.T) {
-	config := &Config{
-		ConfigItem{&Upgrade{}, &Request{Method: "method2"}, &Command{Path: "path2"}, &Response{Status: 2}},
-		ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+	tests := []struct {
+		name   string
+		config *Config
+	}{
+		{
+			"",
+			&Config{
+				ConfigItem{&Upgrade{}, &Request{Method: "method2"}, &Command{Path: "path2"}, &Response{Status: 2}},
+				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+			},
+		},
 	}
 
 	method := "method2"
@@ -55,19 +87,31 @@ func TestConfig_SelectConfigItem__find_by_method__plain(t *testing.T) {
 	headers.Set("key2", "value2")
 	headers.Add("key2", "value3")
 
-	_, _, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, _, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
 
-	if !found {
-		t.Fatal("not found config item")
+			if !found {
+				t.Fatal("not found config item")
+			}
+			assertCommand(cmd, &Command{Path: "path2"}, t)
+			assertResponse(res, &Response{Status: 2}, t)
+		})
 	}
-	assertCommand(cmd, &Command{Path: "path2"}, t)
-	assertResponse(res, &Response{Status: 2}, t)
 }
 
 func TestConfig_SelectConfigItem__find_by_method__ignore_case(t *testing.T) {
-	config := &Config{
-		ConfigItem{&Upgrade{}, &Request{Method: "METHOD2"}, &Command{Path: "path2"}, &Response{Status: 2}},
-		ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+	tests := []struct {
+		name   string
+		config *Config
+	}{
+		{
+			"",
+			&Config{
+				ConfigItem{&Upgrade{}, &Request{Method: "METHOD2"}, &Command{Path: "path2"}, &Response{Status: 2}},
+				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+			},
+		},
 	}
 
 	method := "method2"
@@ -78,19 +122,31 @@ func TestConfig_SelectConfigItem__find_by_method__ignore_case(t *testing.T) {
 	headers.Set("key2", "value2")
 	headers.Add("key2", "value3")
 
-	_, _, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, _, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
 
-	if !found {
-		t.Fatal("not found config item")
+			if !found {
+				t.Fatal("not found config item")
+			}
+			assertCommand(cmd, &Command{Path: "path2"}, t)
+			assertResponse(res, &Response{Status: 2}, t)
+		})
 	}
-	assertCommand(cmd, &Command{Path: "path2"}, t)
-	assertResponse(res, &Response{Status: 2}, t)
 }
 
 func TestConfig_SelectConfigItem__find_by_method__regex(t *testing.T) {
-	config := &Config{
-		ConfigItem{&Upgrade{}, &Request{Method: "method2x|method2"}, &Command{Path: "path2"}, &Response{Status: 2}},
-		ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+	tests := []struct {
+		name   string
+		config *Config
+	}{
+		{
+			"",
+			&Config{
+				ConfigItem{&Upgrade{}, &Request{Method: "method2x|method2"}, &Command{Path: "path2"}, &Response{Status: 2}},
+				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+			},
+		},
 	}
 
 	method := "method2"
@@ -101,19 +157,31 @@ func TestConfig_SelectConfigItem__find_by_method__regex(t *testing.T) {
 	headers.Set("key2", "value2")
 	headers.Add("key2", "value3")
 
-	_, _, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, _, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
 
-	if !found {
-		t.Fatal("not found config item")
+			if !found {
+				t.Fatal("not found config item")
+			}
+			assertCommand(cmd, &Command{Path: "path2"}, t)
+			assertResponse(res, &Response{Status: 2}, t)
+		})
 	}
-	assertCommand(cmd, &Command{Path: "path2"}, t)
-	assertResponse(res, &Response{Status: 2}, t)
 }
 
 func TestConfig_SelectConfigItem__find_by_route__file(t *testing.T) {
-	config := &Config{
-		ConfigItem{&Upgrade{}, &Request{Route: "/route2"}, &Command{Path: "path2"}, &Response{Status: 2}},
-		ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+	tests := []struct {
+		name   string
+		config *Config
+	}{
+		{
+			"",
+			&Config{
+				ConfigItem{&Upgrade{}, &Request{Route: "/route2"}, &Command{Path: "path2"}, &Response{Status: 2}},
+				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+			},
+		},
 	}
 
 	method := "method2"
@@ -124,19 +192,31 @@ func TestConfig_SelectConfigItem__find_by_route__file(t *testing.T) {
 	headers.Set("key2", "value2")
 	headers.Add("key2", "value3")
 
-	_, _, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, _, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
 
-	if !found {
-		t.Fatal("not found config item")
+			if !found {
+				t.Fatal("not found config item")
+			}
+			assertCommand(cmd, &Command{Path: "path2"}, t)
+			assertResponse(res, &Response{Status: 2}, t)
+		})
 	}
-	assertCommand(cmd, &Command{Path: "path2"}, t)
-	assertResponse(res, &Response{Status: 2}, t)
 }
 
 func TestConfig_SelectConfigItem__find_by_route__directory(t *testing.T) {
-	config := &Config{
-		ConfigItem{&Upgrade{}, &Request{Route: "/route2/"}, &Command{Path: "path2"}, &Response{Status: 2}},
-		ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+	tests := []struct {
+		name   string
+		config *Config
+	}{
+		{
+			"",
+			&Config{
+				ConfigItem{&Upgrade{}, &Request{Route: "/route2/"}, &Command{Path: "path2"}, &Response{Status: 2}},
+				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+			},
+		},
 	}
 
 	method := "method2"
@@ -147,19 +227,31 @@ func TestConfig_SelectConfigItem__find_by_route__directory(t *testing.T) {
 	headers.Set("key2", "value2")
 	headers.Add("key2", "value3")
 
-	_, _, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, _, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
 
-	if !found {
-		t.Fatal("not found config item")
+			if !found {
+				t.Fatal("not found config item")
+			}
+			assertCommand(cmd, &Command{Path: "path2"}, t)
+			assertResponse(res, &Response{Status: 2}, t)
+		})
 	}
-	assertCommand(cmd, &Command{Path: "path2"}, t)
-	assertResponse(res, &Response{Status: 2}, t)
 }
 
 func TestConfig_SelectConfigItem__find_by_headers__a_condition(t *testing.T) {
-	config := &Config{
-		ConfigItem{&Upgrade{}, &Request{Headers: map[string]string{"key1": "value1"}}, &Command{Path: "path2"}, &Response{Status: 2}},
-		ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+	tests := []struct {
+		name   string
+		config *Config
+	}{
+		{
+			"",
+			&Config{
+				ConfigItem{&Upgrade{}, &Request{Headers: map[string]string{"key1": "value1"}}, &Command{Path: "path2"}, &Response{Status: 2}},
+				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+			},
+		},
 	}
 
 	method := "method2"
@@ -170,19 +262,31 @@ func TestConfig_SelectConfigItem__find_by_headers__a_condition(t *testing.T) {
 	headers.Set("key2", "value2")
 	headers.Add("key2", "value3")
 
-	_, _, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, _, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
 
-	if !found {
-		t.Fatal("not found config item")
+			if !found {
+				t.Fatal("not found config item")
+			}
+			assertCommand(cmd, &Command{Path: "path2"}, t)
+			assertResponse(res, &Response{Status: 2}, t)
+		})
 	}
-	assertCommand(cmd, &Command{Path: "path2"}, t)
-	assertResponse(res, &Response{Status: 2}, t)
 }
 
 func TestConfig_SelectConfigItem__find_by_headers__some_conditions(t *testing.T) {
-	config := &Config{
-		ConfigItem{&Upgrade{}, &Request{Headers: map[string]string{"key1": "value1", "key2": "value2"}}, &Command{Path: "path2"}, &Response{Status: 2}},
-		ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+	tests := []struct {
+		name   string
+		config *Config
+	}{
+		{
+			"",
+			&Config{
+				ConfigItem{&Upgrade{}, &Request{Headers: map[string]string{"key1": "value1", "key2": "value2"}}, &Command{Path: "path2"}, &Response{Status: 2}},
+				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+			},
+		},
 	}
 
 	method := "method2"
@@ -193,13 +297,17 @@ func TestConfig_SelectConfigItem__find_by_headers__some_conditions(t *testing.T)
 	headers.Set("key2", "value2")
 	headers.Add("key2", "value3")
 
-	_, _, cmd, res, found := config.SelectConfigItem(method, route, headers)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, _, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
 
-	if !found {
-		t.Fatal("not found config item")
+			if !found {
+				t.Fatal("not found config item")
+			}
+			assertCommand(cmd, &Command{Path: "path2"}, t)
+			assertResponse(res, &Response{Status: 2}, t)
+		})
 	}
-	assertCommand(cmd, &Command{Path: "path2"}, t)
-	assertResponse(res, &Response{Status: 2}, t)
 }
 
 func assertCommand(actual, expected *Command, t *testing.T) {
