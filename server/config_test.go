@@ -14,13 +14,13 @@ func TestConfig_SelectConfigItem__no_item(t *testing.T) {
 		{
 			"",
 			&Config{
-				ConfigItem{&Upgrade{}, &Request{Method: "method1", Route: "/route1", Headers: map[string]string{"key1": "value1"}}, &Command{}, &Response{}},
+				ConfigItem{&Upgrade{}, &Request{Method: "method.request", Route: "/route/request", Headers: map[string]string{"key1": "value1"}}, &Command{}, &Response{}},
 			},
 		},
 	}
 
-	method := "method1"
-	route := "/route1"
+	method := "method.request"
+	route := "/route/request"
 	headers := http.Header{}
 
 	for _, tt := range tests {
@@ -42,14 +42,14 @@ func TestConfig_SelectConfigItem__last_item(t *testing.T) {
 		{
 			"",
 			&Config{
-				ConfigItem{&Upgrade{}, &Request{Method: "method2"}, &Command{Path: "path2"}, &Response{Status: 2}},
-				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+				ConfigItem{&Upgrade{}, &Request{Method: "method.request"}, &Command{Path: "path.request"}, &Response{File: "file.request"}},
+				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path.last"}, &Response{File: "file.last"}},
 			},
 		},
 	}
 
-	method := "method1"
-	route := "/route1"
+	method := "method.other"
+	route := "/route/other"
 	headers := http.Header{}
 
 	for _, tt := range tests {
@@ -59,8 +59,8 @@ func TestConfig_SelectConfigItem__last_item(t *testing.T) {
 			if !found {
 				t.Fatal("not found config item")
 			}
-			assertCommand(cmd, &Command{Path: "path1"}, t)
-			assertResponse(res, &Response{Status: 1}, t)
+			assertCommand(cmd, &Command{Path: "path.last"}, t)
+			assertResponse(res, &Response{File: "file.last"}, t)
 		})
 	}
 }
@@ -73,28 +73,28 @@ func TestConfig_SelectConfigItem__find_by_method(t *testing.T) {
 		{
 			"basic method predicate",
 			&Config{
-				ConfigItem{&Upgrade{}, &Request{Method: "method2"}, &Command{Path: "path2"}, &Response{Status: 2}},
-				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+				ConfigItem{&Upgrade{}, &Request{Method: "method.request"}, &Command{Path: "path.request"}, &Response{File: "file.request"}},
+				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path.last"}, &Response{File: "file.last"}},
 			},
 		},
 		{
 			"method predicate ignores case sensitivity",
 			&Config{
-				ConfigItem{&Upgrade{}, &Request{Method: "METHOD2"}, &Command{Path: "path2"}, &Response{Status: 2}},
-				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+				ConfigItem{&Upgrade{}, &Request{Method: "method.request"}, &Command{Path: "path.request"}, &Response{File: "file.request"}},
+				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path.last"}, &Response{File: "file.last"}},
 			},
 		},
 		{
 			"method predicate accepts regex pattern",
 			&Config{
-				ConfigItem{&Upgrade{}, &Request{Method: "method2x|method2"}, &Command{Path: "path2"}, &Response{Status: 2}},
-				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+				ConfigItem{&Upgrade{}, &Request{Method: "method.requestx|method.request"}, &Command{Path: "path.request"}, &Response{File: "file.request"}},
+				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path.last"}, &Response{File: "file.last"}},
 			},
 		},
 	}
 
-	method := "method2"
-	route := "/route2"
+	method := "method.request"
+	route := "/route/other"
 	headers := http.Header{}
 	headers.Set("key1", "value0")
 	headers.Add("key1", "value1")
@@ -108,8 +108,8 @@ func TestConfig_SelectConfigItem__find_by_method(t *testing.T) {
 			if !found {
 				t.Fatal("not found config item")
 			}
-			assertCommand(cmd, &Command{Path: "path2"}, t)
-			assertResponse(res, &Response{Status: 2}, t)
+			assertCommand(cmd, &Command{Path: "path.request"}, t)
+			assertResponse(res, &Response{File: "file.request"}, t)
 		})
 	}
 }
@@ -122,21 +122,21 @@ func TestConfig_SelectConfigItem__find_by_route(t *testing.T) {
 		{
 			"basic route predicate",
 			&Config{
-				ConfigItem{&Upgrade{}, &Request{Route: "/route2"}, &Command{Path: "path2"}, &Response{Status: 2}},
-				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+				ConfigItem{&Upgrade{}, &Request{Route: "/route/request"}, &Command{Path: "path.request"}, &Response{File: "file.request"}},
+				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path.last"}, &Response{File: "file.last"}},
 			},
 		},
 		{
 			"route predicate ignores trailing slash",
 			&Config{
-				ConfigItem{&Upgrade{}, &Request{Route: "/route2/"}, &Command{Path: "path2"}, &Response{Status: 2}},
-				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+				ConfigItem{&Upgrade{}, &Request{Route: "/route/request/"}, &Command{Path: "path.request"}, &Response{File: "file.request"}},
+				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path.last"}, &Response{File: "file.last"}},
 			},
 		},
 	}
 
-	method := "method2"
-	route := "/route2"
+	method := "method.other"
+	route := "/route/request"
 	headers := http.Header{}
 	headers.Set("key1", "value0")
 	headers.Add("key1", "value1")
@@ -150,8 +150,8 @@ func TestConfig_SelectConfigItem__find_by_route(t *testing.T) {
 			if !found {
 				t.Fatal("not found config item")
 			}
-			assertCommand(cmd, &Command{Path: "path2"}, t)
-			assertResponse(res, &Response{Status: 2}, t)
+			assertCommand(cmd, &Command{Path: "path.request"}, t)
+			assertResponse(res, &Response{File: "file.request"}, t)
 		})
 	}
 }
@@ -164,21 +164,21 @@ func TestConfig_SelectConfigItem__find_by_headers(t *testing.T) {
 		{
 			"single entry in headers predicate",
 			&Config{
-				ConfigItem{&Upgrade{}, &Request{Headers: map[string]string{"key1": "value1"}}, &Command{Path: "path2"}, &Response{Status: 2}},
-				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+				ConfigItem{&Upgrade{}, &Request{Headers: map[string]string{"key1": "value1"}}, &Command{Path: "path.request"}, &Response{File: "file.request"}},
+				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path.last"}, &Response{File: "file.last"}},
 			},
 		},
 		{
 			"some entries in headers predicate",
 			&Config{
-				ConfigItem{&Upgrade{}, &Request{Headers: map[string]string{"key1": "value1", "key2": "value2"}}, &Command{Path: "path2"}, &Response{Status: 2}},
-				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
+				ConfigItem{&Upgrade{}, &Request{Headers: map[string]string{"key1": "value1", "key2": "value2"}}, &Command{Path: "path.request"}, &Response{File: "file.request"}},
+				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path.last"}, &Response{File: "file.last"}},
 			},
 		},
 	}
 
-	method := "method2"
-	route := "/route2"
+	method := "method.other"
+	route := "/route/other"
 	headers := http.Header{}
 	headers.Set("key1", "value0")
 	headers.Add("key1", "value1")
@@ -192,8 +192,8 @@ func TestConfig_SelectConfigItem__find_by_headers(t *testing.T) {
 			if !found {
 				t.Fatal("not found config item")
 			}
-			assertCommand(cmd, &Command{Path: "path2"}, t)
-			assertResponse(res, &Response{Status: 2}, t)
+			assertCommand(cmd, &Command{Path: "path.request"}, t)
+			assertResponse(res, &Response{File: "file.request"}, t)
 		})
 	}
 }
