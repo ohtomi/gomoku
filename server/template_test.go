@@ -92,14 +92,16 @@ func createTempFile(prefix string, content []byte) (*os.File, error) {
 	return tempfile, nil
 }
 
-func assertSlice(actual, expected []string, t *testing.T) {
+func assertSlice(actual, expected []string, tb testing.TB) {
+	tb.Helper()
 	if !reflect.DeepEqual(actual, expected) {
-		t.Fatalf("got %+v, but expected %+v", actual, expected)
+		tb.Fatalf("got %+v, but expected %+v", actual, expected)
 	}
 }
 
-func assertString(actual, expected string, t *testing.T) {
+func assertString(actual, expected string, tb testing.TB) {
+	tb.Helper()
 	if actual != expected {
-		t.Fatalf("got %+v, but expected %+v", actual, expected)
+		tb.Fatalf("got %+v, but expected %+v", actual, expected)
 	}
 }

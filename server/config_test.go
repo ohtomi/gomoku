@@ -198,32 +198,34 @@ func TestConfig_SelectConfigItem__find_by_headers(t *testing.T) {
 	}
 }
 
-func assertCommand(actual, expected *Command, t *testing.T) {
+func assertCommand(actual, expected *Command, tb testing.TB) {
+	tb.Helper()
 	if !reflect.DeepEqual(actual.Env, expected.Env) {
-		t.Fatalf("got %+v, but expected %+v", actual.Env, expected.Env)
+		tb.Fatalf("got %+v, but expected %+v", actual.Env, expected.Env)
 	}
 	if !reflect.DeepEqual(actual.Path, expected.Path) {
-		t.Fatalf("got %+v, but expected %+v", actual.Path, expected.Path)
+		tb.Fatalf("got %+v, but expected %+v", actual.Path, expected.Path)
 	}
 	if !reflect.DeepEqual(actual.Args, expected.Args) {
-		t.Fatalf("got %+v, but expected %+v", actual.Args, expected.Args)
+		tb.Fatalf("got %+v, but expected %+v", actual.Args, expected.Args)
 	}
 }
 
-func assertResponse(actual, expected *Response, t *testing.T) {
+func assertResponse(actual, expected *Response, tb testing.TB) {
+	tb.Helper()
 	if !reflect.DeepEqual(actual.Status, expected.Status) {
-		t.Fatalf("got %+v, but expected %+v", actual.Status, expected.Status)
+		tb.Fatalf("got %+v, but expected %+v", actual.Status, expected.Status)
 	}
 	if !reflect.DeepEqual(actual.Headers, expected.Headers) {
-		t.Fatalf("got %+v, but expected %+v", actual.Headers, expected.Headers)
+		tb.Fatalf("got %+v, but expected %+v", actual.Headers, expected.Headers)
 	}
 	if !reflect.DeepEqual(actual.Body, expected.Body) {
-		t.Fatalf("got %+v, but expected %+v", actual.Body, expected.Body)
+		tb.Fatalf("got %+v, but expected %+v", actual.Body, expected.Body)
 	}
 	if !reflect.DeepEqual(actual.Template, expected.Template) {
-		t.Fatalf("got %+v, but expected %+v", actual.Template, expected.Template)
+		tb.Fatalf("got %+v, but expected %+v", actual.Template, expected.Template)
 	}
 	if !reflect.DeepEqual(actual.File, expected.File) {
-		t.Fatalf("got %+v, but expected %+v", actual.File, expected.File)
+		tb.Fatalf("got %+v, but expected %+v", actual.File, expected.File)
 	}
 }
