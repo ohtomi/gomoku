@@ -72,32 +72,39 @@ func buildUserScriptHandler(config *Config, cors, errorNoMatch bool, reporter Re
 
 		conversation := &Conversation{}
 
-		if err := cRequest.Transform(conversation, r); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			reporter.Error(err.Error())
-			return
+		if cRequest != nil {
+			if err := cRequest.Transform(conversation, r); err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				reporter.Error(err.Error())
+				return
+			}
+
+			if reporter.IsEnabled() {
+				reporter.Infof("      body => %s", conversation.Request.Body)
+				reporter.Infof("      form => %s", conversation.Request.Form)
+			}
 		}
 
-		if reporter.IsEnabled() {
-			reporter.Infof("      body => %s", conversation.Request.Body)
-			reporter.Infof("      form => %s", conversation.Request.Form)
+		if cUpgrade != nil {
+			if err := cUpgrade.Accept(w, r); err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				reporter.Error(err.Error())
+				return
+			}
 		}
-
-		if err := cUpgrade.Accept(w, r); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			reporter.Error(err.Error())
-			return
+		if cCommand != nil {
+			if err := cCommand.Execute(conversation); err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				reporter.Error(err.Error())
+				return
+			}
 		}
-		if err := cCommand.Execute(conversation); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			reporter.Error(err.Error())
-			return
-		}
-
-		if err := cResponse.Write(conversation, w); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			reporter.Error(err.Error())
-			return
+		if cResponse != nil {
+			if err := cResponse.Write(conversation, w); err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				reporter.Error(err.Error())
+				return
+			}
 		}
 	}
 }

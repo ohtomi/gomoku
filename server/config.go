@@ -16,10 +16,10 @@ import (
 type Config []ConfigItem
 
 type ConfigItem struct {
-	Upgrade  Upgrade  `yaml:",omitempty"`
-	Request  Request  `yaml:",omitempty"`
-	Command  Command  `yaml:",omitempty"`
-	Response Response `yaml:",omitempty"`
+	Upgrade  *Upgrade  `yaml:",omitempty"`
+	Request  *Request  `yaml:",omitempty"`
+	Command  *Command  `yaml:",omitempty"`
+	Response *Response `yaml:",omitempty"`
 }
 
 type Upgrade struct {
@@ -97,7 +97,7 @@ func (c *Config) SelectConfigItem(method, route string, headers http.Header) (*U
 				continue
 			}
 		}
-		return &element.Upgrade, &element.Request, &element.Command, &element.Response, true
+		return element.Upgrade, element.Request, element.Command, element.Response, true
 	}
 	return nil, nil, nil, nil, false
 }

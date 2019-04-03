@@ -20,31 +20,31 @@ func CreateScaffold(dirname string) error {
 
 	config := &Config{
 		{
-			Request:  Request{Method: "get|post", Route: "/foo", Headers: map[string]string{"x-gomoku": "yes"}},
-			Command:  Command{Path: "python3", Args: []string{"-m", "foo", "{{ .Request.URL.Path }}"}, Env: []string{"GOMOKU=gomoku", "METHOD={{ .Request.Method }}"}},
-			Response: Response{Status: 200, Headers: map[string]string{"content-type": "application/json; charset=utf-8"}, Body: "{\"greeting\": \"{{ .Command.ParseStdoutAsJson.greet }}\", \"method\": \"{{ .Command.ParseStdoutAsJson.method }}\", \"url\": \"{{ .Command.ParseStdoutAsJson.url }}\"}"},
+			Request:  &Request{Method: "get|post", Route: "/foo", Headers: map[string]string{"x-gomoku": "yes"}},
+			Command:  &Command{Path: "python3", Args: []string{"-m", "foo", "{{ .Request.URL.Path }}"}, Env: []string{"GOMOKU=gomoku", "METHOD={{ .Request.Method }}"}},
+			Response: &Response{Status: 200, Headers: map[string]string{"content-type": "application/json; charset=utf-8"}, Body: "{\"greeting\": \"{{ .Command.ParseStdoutAsJson.greet }}\", \"method\": \"{{ .Command.ParseStdoutAsJson.method }}\", \"url\": \"{{ .Command.ParseStdoutAsJson.url }}\"}"},
 		},
 		{
-			Request:  Request{Route: "/bar"},
-			Command:  Command{Path: "python3", Args: []string{"-m", "bar"}},
-			Response: Response{Template: "bar.tmpl"},
+			Request:  &Request{Route: "/bar"},
+			Command:  &Command{Path: "python3", Args: []string{"-m", "bar"}},
+			Response: &Response{Template: "bar.tmpl"},
 		},
 		{
-			Request:  Request{Route: "/baz"},
-			Command:  Command{Path: "python3", Args: []string{"-m", "baz"}},
-			Response: Response{File: "baz.txt"},
+			Request:  &Request{Route: "/baz"},
+			Command:  &Command{Path: "python3", Args: []string{"-m", "baz"}},
+			Response: &Response{File: "baz.txt"},
 		},
 		{
-			Request:  Request{Route: "/static/html"},
-			Response: Response{File: ".{{ .Request.URL.Path }}"},
+			Request:  &Request{Route: "/static/html"},
+			Response: &Response{File: ".{{ .Request.URL.Path }}"},
 		},
 		{
-			Request:  Request{Route: "/static/js"},
-			Response: Response{File: ".{{ .Request.URL.Path }}"},
+			Request:  &Request{Route: "/static/js"},
+			Response: &Response{File: ".{{ .Request.URL.Path }}"},
 		},
 		{
-			Request:  Request{Route: "/static"},
-			Response: Response{Status: 308, Headers: map[string]string{"location": "/static/html/index.html"}},
+			Request:  &Request{Route: "/static"},
+			Response: &Response{Status: 308, Headers: map[string]string{"location": "/static/html/index.html"}},
 		},
 	}
 
