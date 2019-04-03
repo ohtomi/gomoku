@@ -79,22 +79,33 @@ func NewConfig(filename string) (*Config, error) {
 
 func (c *Config) SelectConfigItem(method, route string, headers http.Header) (*Upgrade, *Request, *Command, *Response, bool) {
 	for _, element := range *c {
-		if len(element.Request.Method) != 0 {
-			if !regexp.MustCompile(fmt.Sprintf("(?i)%s", element.Request.Method)).MatchString(method) {
-				continue
+		if element.Upgrade != nil {
+			if len(element.Upgrade.Route) != 0 {
+				if !strings.HasSuffix(route, "/") {
+					route = fmt.Sprintf("%s/", route)
+				}
+				if !regexp.MustCompile(fmt.Sprintf("^%s/", strings.TrimRight(element.Upgrade.Route, "/"))).MatchString(route) {
+					continue
+				}
 			}
-		}
-		if len(element.Request.Route) != 0 {
-			if !strings.HasSuffix(route, "/") {
-				route = fmt.Sprintf("%s/", route)
+		} else if element.Request != nil {
+			if len(element.Request.Method) != 0 {
+				if !regexp.MustCompile(fmt.Sprintf("(?i)%s", element.Request.Method)).MatchString(method) {
+					continue
+				}
 			}
-			if !regexp.MustCompile(fmt.Sprintf("^%s/", strings.TrimRight(element.Request.Route, "/"))).MatchString(route) {
-				continue
+			if len(element.Request.Route) != 0 {
+				if !strings.HasSuffix(route, "/") {
+					route = fmt.Sprintf("%s/", route)
+				}
+				if !regexp.MustCompile(fmt.Sprintf("^%s/", strings.TrimRight(element.Request.Route, "/"))).MatchString(route) {
+					continue
+				}
 			}
-		}
-		if len(element.Request.Headers) != 0 {
-			if !matchHeaders(element.Request.Headers, headers) {
-				continue
+			if len(element.Request.Headers) != 0 {
+				if !matchHeaders(element.Request.Headers, headers) {
+					continue
+				}
 			}
 		}
 		return element.Upgrade, element.Request, element.Command, element.Response, true
