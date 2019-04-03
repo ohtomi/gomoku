@@ -65,83 +65,27 @@ func TestConfig_SelectConfigItem__last_item(t *testing.T) {
 	}
 }
 
-func TestConfig_SelectConfigItem__find_by_method__plain(t *testing.T) {
+func TestConfig_SelectConfigItem__find_by_method(t *testing.T) {
 	tests := []struct {
 		name   string
 		config *Config
 	}{
 		{
-			"",
+			"basic method predicate",
 			&Config{
 				ConfigItem{&Upgrade{}, &Request{Method: "method2"}, &Command{Path: "path2"}, &Response{Status: 2}},
 				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
 			},
 		},
-	}
-
-	method := "method2"
-	route := "/route2"
-	headers := http.Header{}
-	headers.Set("key1", "value0")
-	headers.Add("key1", "value1")
-	headers.Set("key2", "value2")
-	headers.Add("key2", "value3")
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			_, _, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
-
-			if !found {
-				t.Fatal("not found config item")
-			}
-			assertCommand(cmd, &Command{Path: "path2"}, t)
-			assertResponse(res, &Response{Status: 2}, t)
-		})
-	}
-}
-
-func TestConfig_SelectConfigItem__find_by_method__ignore_case(t *testing.T) {
-	tests := []struct {
-		name   string
-		config *Config
-	}{
 		{
-			"",
+			"method predicate ignores case sensitivity",
 			&Config{
 				ConfigItem{&Upgrade{}, &Request{Method: "METHOD2"}, &Command{Path: "path2"}, &Response{Status: 2}},
 				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
 			},
 		},
-	}
-
-	method := "method2"
-	route := "/route2"
-	headers := http.Header{}
-	headers.Set("key1", "value0")
-	headers.Add("key1", "value1")
-	headers.Set("key2", "value2")
-	headers.Add("key2", "value3")
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			_, _, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
-
-			if !found {
-				t.Fatal("not found config item")
-			}
-			assertCommand(cmd, &Command{Path: "path2"}, t)
-			assertResponse(res, &Response{Status: 2}, t)
-		})
-	}
-}
-
-func TestConfig_SelectConfigItem__find_by_method__regex(t *testing.T) {
-	tests := []struct {
-		name   string
-		config *Config
-	}{
 		{
-			"",
+			"method predicate accepts regex pattern",
 			&Config{
 				ConfigItem{&Upgrade{}, &Request{Method: "method2x|method2"}, &Command{Path: "path2"}, &Response{Status: 2}},
 				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
@@ -170,48 +114,20 @@ func TestConfig_SelectConfigItem__find_by_method__regex(t *testing.T) {
 	}
 }
 
-func TestConfig_SelectConfigItem__find_by_route__file(t *testing.T) {
+func TestConfig_SelectConfigItem__find_by_route(t *testing.T) {
 	tests := []struct {
 		name   string
 		config *Config
 	}{
 		{
-			"",
+			"basic route predicate",
 			&Config{
 				ConfigItem{&Upgrade{}, &Request{Route: "/route2"}, &Command{Path: "path2"}, &Response{Status: 2}},
 				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
 			},
 		},
-	}
-
-	method := "method2"
-	route := "/route2"
-	headers := http.Header{}
-	headers.Set("key1", "value0")
-	headers.Add("key1", "value1")
-	headers.Set("key2", "value2")
-	headers.Add("key2", "value3")
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			_, _, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
-
-			if !found {
-				t.Fatal("not found config item")
-			}
-			assertCommand(cmd, &Command{Path: "path2"}, t)
-			assertResponse(res, &Response{Status: 2}, t)
-		})
-	}
-}
-
-func TestConfig_SelectConfigItem__find_by_route__directory(t *testing.T) {
-	tests := []struct {
-		name   string
-		config *Config
-	}{
 		{
-			"",
+			"route predicate ignores trailing slash",
 			&Config{
 				ConfigItem{&Upgrade{}, &Request{Route: "/route2/"}, &Command{Path: "path2"}, &Response{Status: 2}},
 				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
@@ -240,48 +156,20 @@ func TestConfig_SelectConfigItem__find_by_route__directory(t *testing.T) {
 	}
 }
 
-func TestConfig_SelectConfigItem__find_by_headers__a_condition(t *testing.T) {
+func TestConfig_SelectConfigItem__find_by_headers(t *testing.T) {
 	tests := []struct {
 		name   string
 		config *Config
 	}{
 		{
-			"",
+			"single entry in headers predicate",
 			&Config{
 				ConfigItem{&Upgrade{}, &Request{Headers: map[string]string{"key1": "value1"}}, &Command{Path: "path2"}, &Response{Status: 2}},
 				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
 			},
 		},
-	}
-
-	method := "method2"
-	route := "/route2"
-	headers := http.Header{}
-	headers.Set("key1", "value0")
-	headers.Add("key1", "value1")
-	headers.Set("key2", "value2")
-	headers.Add("key2", "value3")
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			_, _, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
-
-			if !found {
-				t.Fatal("not found config item")
-			}
-			assertCommand(cmd, &Command{Path: "path2"}, t)
-			assertResponse(res, &Response{Status: 2}, t)
-		})
-	}
-}
-
-func TestConfig_SelectConfigItem__find_by_headers__some_conditions(t *testing.T) {
-	tests := []struct {
-		name   string
-		config *Config
-	}{
 		{
-			"",
+			"some entries in headers predicate",
 			&Config{
 				ConfigItem{&Upgrade{}, &Request{Headers: map[string]string{"key1": "value1", "key2": "value2"}}, &Command{Path: "path2"}, &Response{Status: 2}},
 				ConfigItem{&Upgrade{}, &Request{}, &Command{Path: "path1"}, &Response{Status: 1}},
