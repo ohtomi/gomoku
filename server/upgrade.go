@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-func (u *Upgrade) Accept(response http.ResponseWriter, request *http.Request) error {
+func (u *Upgrade) Accept(robot *Robot, response http.ResponseWriter, request *http.Request) error {
 	if len(u.Scenario) == 0 {
 		return nil
 	}
@@ -16,18 +16,7 @@ func (u *Upgrade) Accept(response http.ResponseWriter, request *http.Request) er
 	if err != nil {
 		return err
 	}
-	defer connection.Close()
-
-	for {
-		mt, message, err := connection.ReadMessage()
-		if err != nil {
-			break
-		}
-		err = connection.WriteMessage(mt, message)
-		if err != nil {
-			break
-		}
-	}
+	robot.Connection = connection
 
 	return nil
 }

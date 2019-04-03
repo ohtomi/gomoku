@@ -2,33 +2,9 @@ package server
 
 import (
 	"net/http"
-	"net/url"
 
 	"github.com/pkg/errors"
 )
-
-type RequestInConversation struct {
-	Method     string
-	URL        *url.URL
-	Headers    map[string][]string
-	RemoteAddr string
-	Body       string
-	Form       map[string][]string
-}
-
-type CommandInConversation struct {
-	Env    []string
-	Path   string
-	Args   []string
-	Dir    string
-	Stdout string
-	Stderr string
-}
-
-type Conversation struct {
-	Request RequestInConversation
-	Command CommandInConversation
-}
 
 func buildUserScriptHandler(config *Config, cors, errorNoMatch bool, reporter Reporter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -67,44 +43,10 @@ func buildUserScriptHandler(config *Config, cors, errorNoMatch bool, reporter Re
 				w.WriteHeader(http.StatusOK)
 			}
 			reporter.Errorf("    <No match routes>")
-			return
-		}
-
-		conversation := &Conversation{}
-
-		if cRequest != nil {
-			if err := cRequest.Transform(conversation, r); err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				reporter.Error(err.Error())
-				return
-			}
-
-			if reporter.IsEnabled() {
-				reporter.Infof("      body => %s", conversation.Request.Body)
-				reporter.Infof("      form => %s", conversation.Request.Form)
-			}
-		}
-
-		if cUpgrade != nil {
-			if err := cUpgrade.Accept(w, r); err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				reporter.Error(err.Error())
-				return
-			}
-		}
-		if cCommand != nil {
-			if err := cCommand.Execute(conversation); err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				reporter.Error(err.Error())
-				return
-			}
-		}
-		if cResponse != nil {
-			if err := cResponse.Write(conversation, w); err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				reporter.Error(err.Error())
-				return
-			}
+		} else if cUpgrade != nil {
+			RunRobots(cUpgrade, reporter, w, r)
+		} else {
+			DoConversation(cRequest, cCommand, cResponse, reporter, w, r)
 		}
 	}
 }
