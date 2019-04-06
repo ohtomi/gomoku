@@ -9,10 +9,6 @@ import (
 var upgrader = websocket.Upgrader{}
 
 func (u *Upgrade) Execute(robot *LiveRobot, response http.ResponseWriter, request *http.Request) error {
-	if len(u.Scenario) == 0 {
-		return nil
-	}
-
 	if err := u.exchangeUpgradeMessage(robot, response, request); err != nil {
 		return err
 	}

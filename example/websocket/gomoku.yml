@@ -1,6 +1,5 @@
 - upgrade:
     route: /ws
-    scenario: /scenario/
 - request:
     route: /html
   response:

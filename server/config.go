@@ -24,7 +24,6 @@ type ConfigItem struct {
 
 type Upgrade struct {
 	Route    string `yaml:",omitempty"`
-	Scenario string `yaml:",omitempty"`
 }
 
 type Request struct {
