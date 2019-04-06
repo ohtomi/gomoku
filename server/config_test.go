@@ -45,10 +45,10 @@ func TestConfig_SelectConfigItem__no_item(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			upd, req, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
+			item, found := tt.config.SelectConfigItem(method, route, headers)
 
 			if found {
-				t.Fatalf("found wrong config item. upd: %+v, req: %+v, cmd: %+v, res: %+v", upd, req, cmd, res)
+				t.Fatalf("found wrong config item. upd: %+v, req: %+v, cmd: %+v, res: %+v", item.Upgrade, item.Request, item.Command, item.Response)
 			}
 		})
 	}
@@ -90,13 +90,13 @@ func TestConfig_SelectConfigItem__last_item(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, _, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
+			item, found := tt.config.SelectConfigItem(method, route, headers)
 
 			if !found {
 				t.Fatal("not found config item")
 			}
-			assertCommand(cmd, &Command{Path: "path.last"}, t)
-			assertResponse(res, &Response{File: "file.last"}, t)
+			assertCommand(item.Command, &Command{Path: "path.last"}, t)
+			assertResponse(item.Response, &Response{File: "file.last"}, t)
 		})
 	}
 }
@@ -169,13 +169,13 @@ func TestConfig_SelectConfigItem__find_by_method(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, _, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
+			item, found := tt.config.SelectConfigItem(method, route, headers)
 
 			if !found {
 				t.Fatal("not found config item")
 			}
-			assertCommand(cmd, &Command{Path: "path.request"}, t)
-			assertResponse(res, &Response{File: "file.request"}, t)
+			assertCommand(item.Command, &Command{Path: "path.request"}, t)
+			assertResponse(item.Response, &Response{File: "file.request"}, t)
 		})
 	}
 }
@@ -265,13 +265,13 @@ func TestConfig_SelectConfigItem__find_by_route(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, _, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
+			item, found := tt.config.SelectConfigItem(method, route, headers)
 
 			if !found {
 				t.Fatal("not found config item")
 			}
-			assertCommand(cmd, &Command{Path: "path.common"}, t)
-			assertResponse(res, &Response{File: "file.common"}, t)
+			assertCommand(item.Command, &Command{Path: "path.common"}, t)
+			assertResponse(item.Response, &Response{File: "file.common"}, t)
 		})
 	}
 }
@@ -327,13 +327,13 @@ func TestConfig_SelectConfigItem__find_by_headers(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, _, cmd, res, found := tt.config.SelectConfigItem(method, route, headers)
+			item, found := tt.config.SelectConfigItem(method, route, headers)
 
 			if !found {
 				t.Fatal("not found config item")
 			}
-			assertCommand(cmd, &Command{Path: "path.request"}, t)
-			assertResponse(res, &Response{File: "file.request"}, t)
+			assertCommand(item.Command, &Command{Path: "path.request"}, t)
+			assertResponse(item.Response, &Response{File: "file.request"}, t)
 		})
 	}
 }

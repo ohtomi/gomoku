@@ -34,7 +34,7 @@ func buildUserScriptHandler(config *Config, cors, errorNoMatch bool, reporter Re
 			}
 		}
 
-		cUpgrade, cRequest, cCommand, cResponse, found := config.SelectConfigItem(r.Method, r.URL.Path, r.Header)
+		configItem, found := config.SelectConfigItem(r.Method, r.URL.Path, r.Header)
 
 		if !found {
 			if errorNoMatch {
@@ -43,10 +43,10 @@ func buildUserScriptHandler(config *Config, cors, errorNoMatch bool, reporter Re
 				w.WriteHeader(http.StatusOK)
 			}
 			reporter.Errorf("    <No match routes>")
-		} else if cUpgrade != nil {
-			RunRobots(cUpgrade, reporter, w, r)
+		} else if configItem.Upgrade != nil {
+			RunRobots(configItem.Upgrade, reporter, w, r)
 		} else {
-			DoConversation(cRequest, cCommand, cResponse, reporter, w, r)
+			DoConversation(configItem.Request, configItem.Command, configItem.Response, reporter, w, r)
 		}
 	}
 }
