@@ -8,20 +8,20 @@ import (
 
 var upgrader = websocket.Upgrader{}
 
-func (u *Upgrade) Execute(robot *LiveRobot, response http.ResponseWriter, request *http.Request) error {
-	if err := u.exchangeUpgradeMessage(robot, response, request); err != nil {
+func (u *Upgrade) Execute(robotFactory *RobotFactory, response http.ResponseWriter, request *http.Request) error {
+	if err := u.exchangeUpgradeMessage(robotFactory, response, request); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (u *Upgrade) exchangeUpgradeMessage(robot *LiveRobot, response http.ResponseWriter, request *http.Request) error {
+func (u *Upgrade) exchangeUpgradeMessage(robotFactory *RobotFactory, response http.ResponseWriter, request *http.Request) error {
 	connection, err := upgrader.Upgrade(response, request, nil)
 	if err != nil {
 		return err
 	}
-	robot.Connection = connection
+	robotFactory.Connection = connection
 
 	return nil
 }

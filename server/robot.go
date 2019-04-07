@@ -6,31 +6,31 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-type LiveRobot struct {
+type RobotFactory struct {
 	Connection *websocket.Conn
 }
 
 func RunRobots(upgrade *Upgrade, reporter Reporter, w http.ResponseWriter, r *http.Request) {
-	robot := &LiveRobot{}
+	robotFactory := &RobotFactory{}
 
 	if upgrade != nil {
-		if err := upgrade.Execute(robot, w, r); err != nil {
+		if err := upgrade.Execute(robotFactory, w, r); err != nil {
 			reporter.Error(err.Error())
 			return
 		}
 
-		if robot.Connection == nil {
+		if robotFactory.Connection == nil {
 			reporter.Error("TODO")
 			return
 		}
-		defer robot.Connection.Close()
+		defer robotFactory.Connection.Close()
 
 		for {
-			mt, message, err := robot.Connection.ReadMessage()
+			mt, message, err := robotFactory.Connection.ReadMessage()
 			if err != nil {
 				break
 			}
-			err = robot.Connection.WriteMessage(mt, message)
+			err = robotFactory.Connection.WriteMessage(mt, message)
 			if err != nil {
 				break
 			}
