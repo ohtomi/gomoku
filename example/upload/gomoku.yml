@@ -6,8 +6,8 @@
   command:
     path: /usr/bin/head
     args:
-    - -n
-    - 1
-    - '{{ .GetByIndex ( .GetByKey .Request.Form "f" ) 0 }}'
+      - -n
+      - 1
+      - '{{ .GetByIndex ( .GetByKey .Request.Form "f" ) 0 }}'
   response:
     body: "{{ .Command.Stdout }}\n"
