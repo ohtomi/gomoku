@@ -22,14 +22,14 @@ type ConfigItem struct {
 	Response *Response `yaml:",omitempty"`
 }
 
-type Upgrade struct {
-	Route string `yaml:",omitempty"`
-}
-
 type Request struct {
 	Method  string            `yaml:",omitempty"`
 	Route   string            `yaml:",omitempty"`
 	Headers map[string]string `yaml:",omitempty"`
+}
+
+type Upgrade struct {
+	Protocol string `yaml:",omitempty"`
 }
 
 type Command struct {
@@ -78,16 +78,7 @@ func NewConfig(filename string) (*Config, error) {
 
 func (c *Config) SelectConfigItem(method, route string, headers http.Header) (*ConfigItem, bool) {
 	for _, element := range *c {
-		if element.Upgrade != nil {
-			if len(element.Upgrade.Route) != 0 {
-				if !strings.HasSuffix(route, "/") {
-					route = fmt.Sprintf("%s/", route)
-				}
-				if !regexp.MustCompile(fmt.Sprintf("^%s/", strings.TrimRight(element.Upgrade.Route, "/"))).MatchString(route) {
-					continue
-				}
-			}
-		} else if element.Request != nil {
+		if element.Request != nil {
 			if len(element.Request.Method) != 0 {
 				if !regexp.MustCompile(fmt.Sprintf("(?i)%s", element.Request.Method)).MatchString(method) {
 					continue

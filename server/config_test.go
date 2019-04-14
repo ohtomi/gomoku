@@ -12,18 +12,7 @@ func TestConfig_SelectConfigItem__no_item(t *testing.T) {
 		config *Config
 	}{
 		{
-			"not matched predicate in upgrade",
-			&Config{
-				ConfigItem{
-					&Upgrade{Route: "/route/upgrade"},
-					nil,
-					nil,
-					nil,
-				},
-			},
-		},
-		{
-			"not matched predicate in request",
+			"not matched predicate",
 			&Config{
 				ConfigItem{
 					nil,
@@ -60,14 +49,8 @@ func TestConfig_SelectConfigItem__last_item(t *testing.T) {
 		config *Config
 	}{
 		{
-			"no predicates neither in upgrade or request",
+			"not matched predicate",
 			&Config{
-				ConfigItem{
-					&Upgrade{Route: "/route/upgrade"},
-					nil,
-					nil,
-					nil,
-				},
 				ConfigItem{
 					nil,
 					&Request{Method: "method.request"},
@@ -186,41 +169,7 @@ func TestConfig_SelectConfigItem__find_by_route(t *testing.T) {
 		config *Config
 	}{
 		{
-			"basic route predicate in upgrade",
-			&Config{
-				ConfigItem{
-					&Upgrade{Route: "/route/common"},
-					nil,
-					&Command{Path: "path.common"},  // for assertion ONLY
-					&Response{File: "file.common"}, // for assertion ONLY
-				},
-				ConfigItem{
-					nil,
-					nil,
-					&Command{Path: "path.last"},
-					&Response{File: "file.last"},
-				},
-			},
-		},
-		{
-			"route predicate in upgrade ignores trailing slash",
-			&Config{
-				ConfigItem{
-					&Upgrade{Route: "/route/common/"},
-					nil,
-					&Command{Path: "path.common"},  // for assertion ONLY
-					&Response{File: "file.common"}, // for assertion ONLY
-				},
-				ConfigItem{
-					nil,
-					nil,
-					&Command{Path: "path.last"},
-					&Response{File: "file.last"},
-				},
-			},
-		},
-		{
-			"basic route predicate in request",
+			"basic route predicate",
 			&Config{
 				ConfigItem{
 					nil,
@@ -237,7 +186,7 @@ func TestConfig_SelectConfigItem__find_by_route(t *testing.T) {
 			},
 		},
 		{
-			"route predicate in request ignores trailing slash",
+			"route predicate ignores trailing slash",
 			&Config{
 				ConfigItem{
 					nil,

@@ -1,5 +1,7 @@
-- upgrade:
+- request:
     route: /ws
+  upgrade:
+    protocol: ws
 - request:
     route: /html
   response:
