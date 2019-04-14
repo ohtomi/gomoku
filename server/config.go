@@ -16,8 +16,8 @@ import (
 type Config []ConfigItem
 
 type ConfigItem struct {
-	Upgrade  *Upgrade  `yaml:",omitempty"`
 	Request  *Request  `yaml:",omitempty"`
+	Upgrade  *Upgrade  `yaml:",omitempty"`
 	Command  *Command  `yaml:",omitempty"`
 	Response *Response `yaml:",omitempty"`
 }

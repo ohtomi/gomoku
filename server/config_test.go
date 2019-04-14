@@ -15,12 +15,12 @@ func TestConfig_SelectConfigItem__no_item(t *testing.T) {
 			"not matched predicate",
 			&Config{
 				ConfigItem{
-					nil,
 					&Request{
 						Method:  "method.request",
 						Route:   "/route/request",
 						Headers: map[string]string{"key1": "value1"},
 					},
+					nil,
 					&Command{},
 					&Response{},
 				},
@@ -52,8 +52,8 @@ func TestConfig_SelectConfigItem__last_item(t *testing.T) {
 			"not matched predicate",
 			&Config{
 				ConfigItem{
-					nil,
 					&Request{Method: "method.request"},
+					nil,
 					&Command{Path: "path.request"},
 					&Response{File: "file.request"},
 				},
@@ -93,8 +93,8 @@ func TestConfig_SelectConfigItem__find_by_method(t *testing.T) {
 			"basic method predicate",
 			&Config{
 				ConfigItem{
-					nil,
 					&Request{Method: "method.request"},
+					nil,
 					&Command{Path: "path.request"},
 					&Response{File: "file.request"},
 				},
@@ -110,8 +110,8 @@ func TestConfig_SelectConfigItem__find_by_method(t *testing.T) {
 			"method predicate ignores case sensitivity",
 			&Config{
 				ConfigItem{
-					nil,
 					&Request{Method: "METHOD.REQUEST"},
+					nil,
 					&Command{Path: "path.request"},
 					&Response{File: "file.request"},
 				},
@@ -127,8 +127,8 @@ func TestConfig_SelectConfigItem__find_by_method(t *testing.T) {
 			"method predicate accepts regex pattern",
 			&Config{
 				ConfigItem{
-					nil,
 					&Request{Method: "method.request.extra|method.request"},
+					nil,
 					&Command{Path: "path.request"},
 					&Response{File: "file.request"},
 				},
@@ -172,8 +172,8 @@ func TestConfig_SelectConfigItem__find_by_route(t *testing.T) {
 			"basic route predicate",
 			&Config{
 				ConfigItem{
-					nil,
 					&Request{Route: "/route/common"},
+					nil,
 					&Command{Path: "path.common"},
 					&Response{File: "file.common"},
 				},
@@ -189,8 +189,8 @@ func TestConfig_SelectConfigItem__find_by_route(t *testing.T) {
 			"route predicate ignores trailing slash",
 			&Config{
 				ConfigItem{
-					nil,
 					&Request{Route: "/route/common/"},
+					nil,
 					&Command{Path: "path.common"},
 					&Response{File: "file.common"},
 				},
@@ -234,8 +234,8 @@ func TestConfig_SelectConfigItem__find_by_headers(t *testing.T) {
 			"single entry in headers predicate",
 			&Config{
 				ConfigItem{
-					nil,
 					&Request{Headers: map[string]string{"key1": "value1"}},
+					nil,
 					&Command{Path: "path.request"},
 					&Response{File: "file.request"},
 				},
@@ -251,8 +251,8 @@ func TestConfig_SelectConfigItem__find_by_headers(t *testing.T) {
 			"some entries in headers predicate",
 			&Config{
 				ConfigItem{
-					nil,
 					&Request{Headers: map[string]string{"key1": "value1", "key2": "value2"}},
+					nil,
 					&Command{Path: "path.request"},
 					&Response{File: "file.request"},
 				},
