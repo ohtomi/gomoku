@@ -15,14 +15,13 @@ func TestConfig_SelectConfigItem__no_item(t *testing.T) {
 			"not matched predicate",
 			&Config{
 				ConfigItem{
-					&Request{
+					Request: &Request{
 						Method:  "method.request",
 						Route:   "/route/request",
 						Headers: map[string]string{"key1": "value1"},
 					},
-					nil,
-					&Command{},
-					&Response{},
+					Command:  &Command{},
+					Response: &Response{},
 				},
 			},
 		},
@@ -37,7 +36,7 @@ func TestConfig_SelectConfigItem__no_item(t *testing.T) {
 			item, found := tt.config.SelectConfigItem(method, route, headers)
 
 			if found {
-				t.Fatalf("found wrong config item. upd: %+v, req: %+v, cmd: %+v, res: %+v", item.Upgrade, item.Request, item.Command, item.Response)
+				t.Fatalf("found wrong config item: %+v", item)
 			}
 		})
 	}
@@ -52,16 +51,13 @@ func TestConfig_SelectConfigItem__last_item(t *testing.T) {
 			"not matched predicate",
 			&Config{
 				ConfigItem{
-					&Request{Method: "method.request"},
-					nil,
-					&Command{Path: "path.request"},
-					&Response{File: "file.request"},
+					Request:  &Request{Method: "method.request"},
+					Command:  &Command{Path: "path.request"},
+					Response: &Response{File: "file.request"},
 				},
 				ConfigItem{
-					nil,
-					nil,
-					&Command{Path: "path.last"},
-					&Response{File: "file.last"},
+					Command:  &Command{Path: "path.last"},
+					Response: &Response{File: "file.last"},
 				},
 			},
 		},
@@ -93,16 +89,13 @@ func TestConfig_SelectConfigItem__find_by_method(t *testing.T) {
 			"basic method predicate",
 			&Config{
 				ConfigItem{
-					&Request{Method: "method.request"},
-					nil,
-					&Command{Path: "path.request"},
-					&Response{File: "file.request"},
+					Request:  &Request{Method: "method.request"},
+					Command:  &Command{Path: "path.request"},
+					Response: &Response{File: "file.request"},
 				},
 				ConfigItem{
-					nil,
-					nil,
-					&Command{Path: "path.last"},
-					&Response{File: "file.last"},
+					Command:  &Command{Path: "path.last"},
+					Response: &Response{File: "file.last"},
 				},
 			},
 		},
@@ -110,16 +103,13 @@ func TestConfig_SelectConfigItem__find_by_method(t *testing.T) {
 			"method predicate ignores case sensitivity",
 			&Config{
 				ConfigItem{
-					&Request{Method: "METHOD.REQUEST"},
-					nil,
-					&Command{Path: "path.request"},
-					&Response{File: "file.request"},
+					Request:  &Request{Method: "METHOD.REQUEST"},
+					Command:  &Command{Path: "path.request"},
+					Response: &Response{File: "file.request"},
 				},
 				ConfigItem{
-					nil,
-					nil,
-					&Command{Path: "path.last"},
-					&Response{File: "file.last"},
+					Command:  &Command{Path: "path.last"},
+					Response: &Response{File: "file.last"},
 				},
 			},
 		},
@@ -127,16 +117,13 @@ func TestConfig_SelectConfigItem__find_by_method(t *testing.T) {
 			"method predicate accepts regex pattern",
 			&Config{
 				ConfigItem{
-					&Request{Method: "method.request.extra|method.request"},
-					nil,
-					&Command{Path: "path.request"},
-					&Response{File: "file.request"},
+					Request:  &Request{Method: "method.request.extra|method.request"},
+					Command:  &Command{Path: "path.request"},
+					Response: &Response{File: "file.request"},
 				},
 				ConfigItem{
-					nil,
-					nil,
-					&Command{Path: "path.last"},
-					&Response{File: "file.last"},
+					Command:  &Command{Path: "path.last"},
+					Response: &Response{File: "file.last"},
 				},
 			},
 		},
@@ -172,16 +159,13 @@ func TestConfig_SelectConfigItem__find_by_route(t *testing.T) {
 			"basic route predicate",
 			&Config{
 				ConfigItem{
-					&Request{Route: "/route/common"},
-					nil,
-					&Command{Path: "path.common"},
-					&Response{File: "file.common"},
+					Request:  &Request{Route: "/route/common"},
+					Command:  &Command{Path: "path.common"},
+					Response: &Response{File: "file.common"},
 				},
 				ConfigItem{
-					nil,
-					nil,
-					&Command{Path: "path.last"},
-					&Response{File: "file.last"},
+					Command:  &Command{Path: "path.last"},
+					Response: &Response{File: "file.last"},
 				},
 			},
 		},
@@ -189,16 +173,13 @@ func TestConfig_SelectConfigItem__find_by_route(t *testing.T) {
 			"route predicate ignores trailing slash",
 			&Config{
 				ConfigItem{
-					&Request{Route: "/route/common/"},
-					nil,
-					&Command{Path: "path.common"},
-					&Response{File: "file.common"},
+					Request:  &Request{Route: "/route/common/"},
+					Command:  &Command{Path: "path.common"},
+					Response: &Response{File: "file.common"},
 				},
 				ConfigItem{
-					nil,
-					nil,
-					&Command{Path: "path.last"},
-					&Response{File: "file.last"},
+					Command:  &Command{Path: "path.last"},
+					Response: &Response{File: "file.last"},
 				},
 			},
 		},
@@ -234,16 +215,13 @@ func TestConfig_SelectConfigItem__find_by_headers(t *testing.T) {
 			"single entry in headers predicate",
 			&Config{
 				ConfigItem{
-					&Request{Headers: map[string]string{"key1": "value1"}},
-					nil,
-					&Command{Path: "path.request"},
-					&Response{File: "file.request"},
+					Request:  &Request{Headers: map[string]string{"key1": "value1"}},
+					Command:  &Command{Path: "path.request"},
+					Response: &Response{File: "file.request"},
 				},
 				ConfigItem{
-					nil,
-					nil,
-					&Command{Path: "path.last"},
-					&Response{File: "file.last"},
+					Command:  &Command{Path: "path.last"},
+					Response: &Response{File: "file.last"},
 				},
 			},
 		},
@@ -251,16 +229,13 @@ func TestConfig_SelectConfigItem__find_by_headers(t *testing.T) {
 			"some entries in headers predicate",
 			&Config{
 				ConfigItem{
-					&Request{Headers: map[string]string{"key1": "value1", "key2": "value2"}},
-					nil,
-					&Command{Path: "path.request"},
-					&Response{File: "file.request"},
+					Request:  &Request{Headers: map[string]string{"key1": "value1", "key2": "value2"}},
+					Command:  &Command{Path: "path.request"},
+					Response: &Response{File: "file.request"},
 				},
 				ConfigItem{
-					nil,
-					nil,
-					&Command{Path: "path.last"},
-					&Response{File: "file.last"},
+					Command:  &Command{Path: "path.last"},
+					Response: &Response{File: "file.last"},
 				},
 			},
 		},
