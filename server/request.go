@@ -14,20 +14,20 @@ func (r *Request) Transform(conversation *Conversation, request *http.Request) e
 	conversation.Request.Headers = request.Header
 	conversation.Request.RemoteAddr = request.RemoteAddr
 
-	if err := r.readBody(conversation, request); err != nil {
+	if err := readRequestBody(conversation, request); err != nil {
 		return err
 	}
-	if err := r.readForm(conversation, request); err != nil {
+	if err := readRequestForm(conversation, request); err != nil {
 		return err
 	}
-	if err := r.readMultipartForm(conversation, request); err != nil {
+	if err := readRequestMultipartForm(conversation, request); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (r *Request) readBody(conversation *Conversation, request *http.Request) error {
+func readRequestBody(conversation *Conversation, request *http.Request) error {
 	if strings.HasPrefix(request.Header.Get("content-type"), "application/x-www-form-urlencoded") || strings.HasPrefix(request.Header.Get("content-type"), "multipart/form-data") {
 		return nil
 	}
@@ -41,7 +41,7 @@ func (r *Request) readBody(conversation *Conversation, request *http.Request) er
 	return nil
 }
 
-func (r *Request) readForm(conversation *Conversation, request *http.Request) error {
+func readRequestForm(conversation *Conversation, request *http.Request) error {
 	if !strings.HasPrefix(request.Header.Get("content-type"), "application/x-www-form-urlencoded") {
 		return nil
 	}
@@ -54,7 +54,7 @@ func (r *Request) readForm(conversation *Conversation, request *http.Request) er
 	return nil
 }
 
-func (r *Request) readMultipartForm(conversation *Conversation, request *http.Request) error {
+func readRequestMultipartForm(conversation *Conversation, request *http.Request) error {
 	if !strings.HasPrefix(request.Header.Get("content-type"), "multipart/form-data") {
 		return nil
 	}

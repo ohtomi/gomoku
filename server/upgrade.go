@@ -6,18 +6,20 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var upgrader = websocket.Upgrader{}
+var wsUpgrader = websocket.Upgrader{}
 
 func (u *Upgrade) Execute(robotFactory *RobotFactory, response http.ResponseWriter, request *http.Request) error {
-	if err := u.exchangeUpgradeMessage(robotFactory, response, request); err != nil {
-		return err
+	if u.Protocol == "ws" {
+		if err := exchangeWsUpgradeMessage(robotFactory, response, request); err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
-func (u *Upgrade) exchangeUpgradeMessage(robotFactory *RobotFactory, response http.ResponseWriter, request *http.Request) error {
-	connection, err := upgrader.Upgrade(response, request, nil)
+func exchangeWsUpgradeMessage(robotFactory *RobotFactory, response http.ResponseWriter, request *http.Request) error {
+	connection, err := wsUpgrader.Upgrade(response, request, nil)
 	if err != nil {
 		return err
 	}
