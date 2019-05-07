@@ -28,7 +28,7 @@ type CommandInConversation struct {
 	Stderr string
 }
 
-func DoConversation(request *Request, command *Command, response *Response, reporter Reporter, w http.ResponseWriter, r *http.Request) {
+func TryConversation(request *Request, command *Command, response *Response, reporter Reporter, w http.ResponseWriter, r *http.Request) {
 	conversation := &Conversation{}
 
 	if request != nil {

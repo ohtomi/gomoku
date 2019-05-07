@@ -10,7 +10,7 @@ type RobotFactory struct {
 	Connection *websocket.Conn
 }
 
-func RunRobots(upgrade *Upgrade, reporter Reporter, w http.ResponseWriter, r *http.Request) {
+func TryRunRobots(upgrade *Upgrade, reporter Reporter, w http.ResponseWriter, r *http.Request) {
 	robotFactory := &RobotFactory{}
 
 	if upgrade != nil {
