@@ -43,10 +43,16 @@ func buildUserScriptHandler(config *Config, cors, errorNoMatch bool, reporter Re
 				w.WriteHeader(http.StatusOK)
 			}
 			reporter.Errorf("    <No match routes>")
+			return
+		}
+
+		if configItem.Request != nil {
+			DoConversation(configItem.Request, configItem.Command, configItem.Response, reporter, w, r)
 		} else if configItem.Upgrade != nil {
 			RunRobots(configItem.Upgrade, reporter, w, r)
 		} else {
-			DoConversation(configItem.Request, configItem.Command, configItem.Response, reporter, w, r)
+			w.WriteHeader(http.StatusInternalServerError)
+			reporter.Errorf("    <Ambiguous configuration>")
 		}
 	}
 }
