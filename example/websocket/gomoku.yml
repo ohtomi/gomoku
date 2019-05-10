@@ -2,6 +2,23 @@
     route: /ws
   upgrade:
     protocol: ws
+  robots:
+    - source:
+        type: 1
+        body: ping
+      transform:
+        env:
+          - 1=11
+          - 2=22
+          - 3=33
+        path: /path/to/cmd
+        args:
+          - 1
+          - 2
+          - 3
+      sink:
+        type: 1
+        body: pong
 - request:
     route: /html
   response:

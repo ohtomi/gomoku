@@ -18,6 +18,7 @@ type Config []ConfigItem
 type ConfigItem struct {
 	Request  *Request  `yaml:",omitempty"`
 	Upgrade  *Upgrade  `yaml:",omitempty"`
+	Robots   *Robots   `yaml:",omitempty"`
 	Command  *Command  `yaml:",omitempty"`
 	Response *Response `yaml:",omitempty"`
 }
@@ -30,6 +31,27 @@ type Request struct {
 
 type Upgrade struct {
 	Protocol string `yaml:",omitempty"`
+}
+
+type Robots []RobotItem
+
+type RobotItem struct {
+	Source    SourceOrSink
+	Transform Transform
+	Sink      SourceOrSink
+}
+
+type SourceOrSink struct {
+	Type     int
+	Body     string `yaml:",omitempty"`
+	Template string `yaml:",omitempty"`
+	File     string `yaml:",omitempty"`
+}
+
+type Transform struct {
+	Env  []string `yaml:",omitempty"`
+	Path string   `yaml:",omitempty"`
+	Args []string `yaml:",omitempty"`
 }
 
 type Command struct {
