@@ -2,15 +2,19 @@ package server
 
 import (
 	"net/http"
-
-	"github.com/gorilla/websocket"
 )
 
 type RobotFactory struct {
-	Connection *websocket.Conn
+	Connection UpgradedConnection
 }
 
-func TryRunRobots(upgrade *Upgrade, reporter Reporter, w http.ResponseWriter, r *http.Request) {
+type UpgradedConnection interface {
+	ReadMessage() (int, []byte, error)
+	WriteMessage(int, []byte) error
+	Close() error
+}
+
+func TryRunRobots(upgrade *Upgrade, robots *Robots, reporter Reporter, w http.ResponseWriter, r *http.Request) {
 	robotFactory := &RobotFactory{}
 
 	if upgrade != nil {
