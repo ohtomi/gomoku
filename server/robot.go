@@ -34,7 +34,11 @@ func TryRunRobots(upgrade *Upgrade, robots *Robots, reporter Reporter, w http.Re
 			if err != nil {
 				break
 			}
-			err = robotFactory.Connection.WriteMessage(mt, message)
+			robot, found := robots.SelectRobotItem(mt, string(message))
+			if !found {
+				continue
+			}
+			err = robotFactory.Connection.WriteMessage(robot.Sink.Type, []byte (robot.Sink.Body))
 			if err != nil {
 				break
 			}
