@@ -27,21 +27,24 @@ func TryRunRobots(upgrade *Upgrade, robots *Robots, reporter Reporter, w http.Re
 			reporter.Error("TODO")
 			return
 		}
-		defer robotFactory.Connection.Close()
 
-		for {
-			mt, message, err := robotFactory.Connection.ReadMessage()
-			if err != nil {
-				break
+		go func(conn UpgradedConnection, robots *Robots) {
+			defer conn.Close()
+
+			for {
+				mt, message, err := conn.ReadMessage()
+				if err != nil {
+					break
+				}
+				robot, found := robots.SelectRobotItem(mt, string(message))
+				if !found {
+					continue
+				}
+				err = conn.WriteMessage(robot.Sink.Type, []byte (robot.Sink.Body))
+				if err != nil {
+					break
+				}
 			}
-			robot, found := robots.SelectRobotItem(mt, string(message))
-			if !found {
-				continue
-			}
-			err = robotFactory.Connection.WriteMessage(robot.Sink.Type, []byte (robot.Sink.Body))
-			if err != nil {
-				break
-			}
-		}
+		}(robotFactory.Connection, robots)
 	}
 }
