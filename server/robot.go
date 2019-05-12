@@ -1,50 +1,39 @@
 package server
 
 import (
-	"net/http"
+	"regexp"
 )
 
-type RobotFactory struct {
-	Connection UpgradedConnection
-}
+func (r *Robots) Run(conn UpgradedConnection) {
+	defer conn.Close()
 
-type UpgradedConnection interface {
-	ReadMessage() (int, []byte, error)
-	WriteMessage(int, []byte) error
-	Close() error
-}
-
-func TryRunRobots(upgrade *Upgrade, robots *Robots, reporter Reporter, w http.ResponseWriter, r *http.Request) {
-	robotFactory := &RobotFactory{}
-
-	if upgrade != nil {
-		if err := upgrade.Execute(robotFactory, w, r); err != nil {
-			reporter.Error(err.Error())
-			return
+	for {
+		mt, message, err := conn.ReadMessage()
+		if err != nil {
+			break
 		}
-
-		if robotFactory.Connection == nil {
-			reporter.Error("TODO")
-			return
+		robot, found := r.SelectRobotItem(mt, string(message))
+		if !found {
+			continue
 		}
-
-		go func(conn UpgradedConnection, robots *Robots) {
-			defer conn.Close()
-
-			for {
-				mt, message, err := conn.ReadMessage()
-				if err != nil {
-					break
-				}
-				robot, found := robots.SelectRobotItem(mt, string(message))
-				if !found {
-					continue
-				}
-				err = conn.WriteMessage(robot.Sink.Type, []byte (robot.Sink.Body))
-				if err != nil {
-					break
-				}
-			}
-		}(robotFactory.Connection, robots)
+		err = conn.WriteMessage(robot.Sink.Type, []byte (robot.Sink.Body))
+		if err != nil {
+			break
+		}
 	}
+}
+
+func (r *Robots) SelectRobotItem(messageType int, messageBody string) (*RobotItem, bool) {
+	for _, element := range *r {
+		if element.Source.Type != messageType {
+			continue
+		}
+		if len(element.Source.Body) != 0 {
+			if !regexp.MustCompile(element.Source.Body).MatchString(messageBody) {
+				continue
+			}
+		}
+		return &element, true
+	}
+	return nil, false
 }
