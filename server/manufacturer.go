@@ -28,6 +28,6 @@ func TryRunRobots(upgrade *Upgrade, robots *Robots, reporter Reporter, w http.Re
 			return
 		}
 
-		go robots.Run(robotFactory.Connection)
+		go robots.Run(robotFactory)
 	}
 }
