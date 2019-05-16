@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/websocket"
+	"github.com/pkg/errors"
 )
 
 var wsUpgrader = websocket.Upgrader{}
@@ -13,9 +14,10 @@ func (u *Upgrade) Execute(robotFactory *RobotFactory, response http.ResponseWrit
 		if err := exchangeWsUpgradeMessage(robotFactory, response, request); err != nil {
 			return err
 		}
+		return nil
 	}
 
-	return nil
+	return errors.Errorf("unsupported protocol: %s", u.Protocol)
 }
 
 func exchangeWsUpgradeMessage(robotFactory *RobotFactory, response http.ResponseWriter, request *http.Request) error {
