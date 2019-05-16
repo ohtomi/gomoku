@@ -12,7 +12,7 @@ func (r *Robots) Run(robotFactory *RobotFactory) {
 		if err != nil {
 			break
 		}
-		robot, found := r.selectRobotItem(mt, string(message))
+		robot, found := selectRobotItem(r, mt, string(message))
 		if !found {
 			continue
 		}
@@ -23,8 +23,8 @@ func (r *Robots) Run(robotFactory *RobotFactory) {
 	}
 }
 
-func (r *Robots) selectRobotItem(messageType int, messageBody string) (*RobotItem, bool) {
-	for _, element := range *r {
+func selectRobotItem(robots *Robots, messageType int, messageBody string) (*RobotItem, bool) {
+	for _, element := range *robots {
 		if element.Source.Type != messageType {
 			continue
 		}
