@@ -22,12 +22,6 @@ func TryRunRobots(upgrade *Upgrade, robots *Robots, reporter Reporter, w http.Re
 			reporter.Error(err.Error())
 			return
 		}
-
-		if robotFactory.Connection == nil {
-			reporter.Error("TODO")
-			return
-		}
-
 		go robots.Run(robotFactory)
 	}
 }
