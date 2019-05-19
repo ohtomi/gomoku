@@ -46,10 +46,10 @@ func buildUserScriptHandler(config *Config, cors, errorNoMatch bool, reporter Re
 			return
 		}
 
-		if configItem.Upgrade != nil {
-			TryRunRobots(configItem.Upgrade, configItem.Robots, reporter, w, r)
+		if len(configItem.Upgrade.Protocol) != 0 {
+			TryRunRobots(&configItem.Upgrade, &configItem.Robots, reporter, w, r)
 		} else {
-			TryConversation(configItem.Request, configItem.Command, configItem.Response, reporter, w, r)
+			TryConversation(&configItem.Request, &configItem.Command, &configItem.Response, reporter, w, r)
 		}
 	}
 }

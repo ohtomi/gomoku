@@ -15,13 +15,13 @@ func TestConfig_SelectConfigItem__no_item(t *testing.T) {
 			"not matched predicate",
 			&Config{
 				ConfigItem{
-					Request: &Request{
+					Request: Request{
 						Method:  "method.request",
 						Route:   "/route/request",
 						Headers: map[string]string{"key1": "value1"},
 					},
-					Command:  &Command{},
-					Response: &Response{},
+					Command:  Command{},
+					Response: Response{},
 				},
 			},
 		},
@@ -51,13 +51,13 @@ func TestConfig_SelectConfigItem__last_item(t *testing.T) {
 			"not matched predicate",
 			&Config{
 				ConfigItem{
-					Request:  &Request{Method: "method.request"},
-					Command:  &Command{Path: "path.request"},
-					Response: &Response{File: "file.request"},
+					Request:  Request{Method: "method.request"},
+					Command:  Command{Path: "path.request"},
+					Response: Response{File: "file.request"},
 				},
 				ConfigItem{
-					Command:  &Command{Path: "path.last"},
-					Response: &Response{File: "file.last"},
+					Command:  Command{Path: "path.last"},
+					Response: Response{File: "file.last"},
 				},
 			},
 		},
@@ -74,8 +74,8 @@ func TestConfig_SelectConfigItem__last_item(t *testing.T) {
 			if !found {
 				t.Fatal("not found config item")
 			}
-			assertCommand(item.Command, &Command{Path: "path.last"}, t)
-			assertResponse(item.Response, &Response{File: "file.last"}, t)
+			assertCommand(item.Command, Command{Path: "path.last"}, t)
+			assertResponse(item.Response, Response{File: "file.last"}, t)
 		})
 	}
 }
@@ -89,13 +89,13 @@ func TestConfig_SelectConfigItem__find_by_method(t *testing.T) {
 			"basic method predicate",
 			&Config{
 				ConfigItem{
-					Request:  &Request{Method: "method.request"},
-					Command:  &Command{Path: "path.request"},
-					Response: &Response{File: "file.request"},
+					Request:  Request{Method: "method.request"},
+					Command:  Command{Path: "path.request"},
+					Response: Response{File: "file.request"},
 				},
 				ConfigItem{
-					Command:  &Command{Path: "path.last"},
-					Response: &Response{File: "file.last"},
+					Command:  Command{Path: "path.last"},
+					Response: Response{File: "file.last"},
 				},
 			},
 		},
@@ -103,13 +103,13 @@ func TestConfig_SelectConfigItem__find_by_method(t *testing.T) {
 			"method predicate ignores case sensitivity",
 			&Config{
 				ConfigItem{
-					Request:  &Request{Method: "METHOD.REQUEST"},
-					Command:  &Command{Path: "path.request"},
-					Response: &Response{File: "file.request"},
+					Request:  Request{Method: "METHOD.REQUEST"},
+					Command:  Command{Path: "path.request"},
+					Response: Response{File: "file.request"},
 				},
 				ConfigItem{
-					Command:  &Command{Path: "path.last"},
-					Response: &Response{File: "file.last"},
+					Command:  Command{Path: "path.last"},
+					Response: Response{File: "file.last"},
 				},
 			},
 		},
@@ -117,13 +117,13 @@ func TestConfig_SelectConfigItem__find_by_method(t *testing.T) {
 			"method predicate accepts regex pattern",
 			&Config{
 				ConfigItem{
-					Request:  &Request{Method: "method.request.extra|method.request"},
-					Command:  &Command{Path: "path.request"},
-					Response: &Response{File: "file.request"},
+					Request:  Request{Method: "method.request.extra|method.request"},
+					Command:  Command{Path: "path.request"},
+					Response: Response{File: "file.request"},
 				},
 				ConfigItem{
-					Command:  &Command{Path: "path.last"},
-					Response: &Response{File: "file.last"},
+					Command:  Command{Path: "path.last"},
+					Response: Response{File: "file.last"},
 				},
 			},
 		},
@@ -144,8 +144,8 @@ func TestConfig_SelectConfigItem__find_by_method(t *testing.T) {
 			if !found {
 				t.Fatal("not found config item")
 			}
-			assertCommand(item.Command, &Command{Path: "path.request"}, t)
-			assertResponse(item.Response, &Response{File: "file.request"}, t)
+			assertCommand(item.Command, Command{Path: "path.request"}, t)
+			assertResponse(item.Response, Response{File: "file.request"}, t)
 		})
 	}
 }
@@ -159,13 +159,13 @@ func TestConfig_SelectConfigItem__find_by_route(t *testing.T) {
 			"basic route predicate",
 			&Config{
 				ConfigItem{
-					Request:  &Request{Route: "/route/common"},
-					Command:  &Command{Path: "path.common"},
-					Response: &Response{File: "file.common"},
+					Request:  Request{Route: "/route/common"},
+					Command:  Command{Path: "path.common"},
+					Response: Response{File: "file.common"},
 				},
 				ConfigItem{
-					Command:  &Command{Path: "path.last"},
-					Response: &Response{File: "file.last"},
+					Command:  Command{Path: "path.last"},
+					Response: Response{File: "file.last"},
 				},
 			},
 		},
@@ -173,13 +173,13 @@ func TestConfig_SelectConfigItem__find_by_route(t *testing.T) {
 			"route predicate ignores trailing slash",
 			&Config{
 				ConfigItem{
-					Request:  &Request{Route: "/route/common/"},
-					Command:  &Command{Path: "path.common"},
-					Response: &Response{File: "file.common"},
+					Request:  Request{Route: "/route/common/"},
+					Command:  Command{Path: "path.common"},
+					Response: Response{File: "file.common"},
 				},
 				ConfigItem{
-					Command:  &Command{Path: "path.last"},
-					Response: &Response{File: "file.last"},
+					Command:  Command{Path: "path.last"},
+					Response: Response{File: "file.last"},
 				},
 			},
 		},
@@ -200,8 +200,8 @@ func TestConfig_SelectConfigItem__find_by_route(t *testing.T) {
 			if !found {
 				t.Fatal("not found config item")
 			}
-			assertCommand(item.Command, &Command{Path: "path.common"}, t)
-			assertResponse(item.Response, &Response{File: "file.common"}, t)
+			assertCommand(item.Command, Command{Path: "path.common"}, t)
+			assertResponse(item.Response, Response{File: "file.common"}, t)
 		})
 	}
 }
@@ -215,13 +215,13 @@ func TestConfig_SelectConfigItem__find_by_headers(t *testing.T) {
 			"single entry in headers predicate",
 			&Config{
 				ConfigItem{
-					Request:  &Request{Headers: map[string]string{"key1": "value1"}},
-					Command:  &Command{Path: "path.request"},
-					Response: &Response{File: "file.request"},
+					Request:  Request{Headers: map[string]string{"key1": "value1"}},
+					Command:  Command{Path: "path.request"},
+					Response: Response{File: "file.request"},
 				},
 				ConfigItem{
-					Command:  &Command{Path: "path.last"},
-					Response: &Response{File: "file.last"},
+					Command:  Command{Path: "path.last"},
+					Response: Response{File: "file.last"},
 				},
 			},
 		},
@@ -229,13 +229,13 @@ func TestConfig_SelectConfigItem__find_by_headers(t *testing.T) {
 			"some entries in headers predicate",
 			&Config{
 				ConfigItem{
-					Request:  &Request{Headers: map[string]string{"key1": "value1", "key2": "value2"}},
-					Command:  &Command{Path: "path.request"},
-					Response: &Response{File: "file.request"},
+					Request:  Request{Headers: map[string]string{"key1": "value1", "key2": "value2"}},
+					Command:  Command{Path: "path.request"},
+					Response: Response{File: "file.request"},
 				},
 				ConfigItem{
-					Command:  &Command{Path: "path.last"},
-					Response: &Response{File: "file.last"},
+					Command:  Command{Path: "path.last"},
+					Response: Response{File: "file.last"},
 				},
 			},
 		},
@@ -256,13 +256,13 @@ func TestConfig_SelectConfigItem__find_by_headers(t *testing.T) {
 			if !found {
 				t.Fatal("not found config item")
 			}
-			assertCommand(item.Command, &Command{Path: "path.request"}, t)
-			assertResponse(item.Response, &Response{File: "file.request"}, t)
+			assertCommand(item.Command, Command{Path: "path.request"}, t)
+			assertResponse(item.Response, Response{File: "file.request"}, t)
 		})
 	}
 }
 
-func assertCommand(actual, expected *Command, tb testing.TB) {
+func assertCommand(actual, expected Command, tb testing.TB) {
 	tb.Helper()
 	if !reflect.DeepEqual(actual.Env, expected.Env) {
 		tb.Fatalf("got %+v, but expected %+v", actual.Env, expected.Env)
@@ -275,7 +275,7 @@ func assertCommand(actual, expected *Command, tb testing.TB) {
 	}
 }
 
-func assertResponse(actual, expected *Response, tb testing.TB) {
+func assertResponse(actual, expected Response, tb testing.TB) {
 	tb.Helper()
 	if !reflect.DeepEqual(actual.Status, expected.Status) {
 		tb.Fatalf("got %+v, but expected %+v", actual.Status, expected.Status)

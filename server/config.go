@@ -16,11 +16,11 @@ import (
 type Config []ConfigItem
 
 type ConfigItem struct {
-	Request  *Request  `yaml:",omitempty"`
-	Upgrade  *Upgrade  `yaml:",omitempty"`
-	Robots   *Robots   `yaml:",omitempty"`
-	Command  *Command  `yaml:",omitempty"`
-	Response *Response `yaml:",omitempty"`
+	Request  Request  `yaml:",omitempty"`
+	Upgrade  Upgrade  `yaml:",omitempty"`
+	Robots   Robots   `yaml:",omitempty"`
+	Command  Command  `yaml:",omitempty"`
+	Response Response `yaml:",omitempty"`
 }
 
 type Request struct {
@@ -100,24 +100,22 @@ func NewConfig(filename string) (*Config, error) {
 
 func (c *Config) SelectConfigItem(method, route string, headers http.Header) (*ConfigItem, bool) {
 	for _, element := range *c {
-		if element.Request != nil {
-			if len(element.Request.Method) != 0 {
-				if !regexp.MustCompile(fmt.Sprintf("(?i)%s", element.Request.Method)).MatchString(method) {
-					continue
-				}
+		if len(element.Request.Method) != 0 {
+			if !regexp.MustCompile(fmt.Sprintf("(?i)%s", element.Request.Method)).MatchString(method) {
+				continue
 			}
-			if len(element.Request.Route) != 0 {
-				if !strings.HasSuffix(route, "/") {
-					route = fmt.Sprintf("%s/", route)
-				}
-				if !regexp.MustCompile(fmt.Sprintf("^%s/", strings.TrimRight(element.Request.Route, "/"))).MatchString(route) {
-					continue
-				}
+		}
+		if len(element.Request.Route) != 0 {
+			if !strings.HasSuffix(route, "/") {
+				route = fmt.Sprintf("%s/", route)
 			}
-			if len(element.Request.Headers) != 0 {
-				if !matchHeaders(element.Request.Headers, headers) {
-					continue
-				}
+			if !regexp.MustCompile(fmt.Sprintf("^%s/", strings.TrimRight(element.Request.Route, "/"))).MatchString(route) {
+				continue
+			}
+		}
+		if len(element.Request.Headers) != 0 {
+			if !matchHeaders(element.Request.Headers, headers) {
+				continue
 			}
 		}
 		return &element, true
